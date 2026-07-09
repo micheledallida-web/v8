@@ -1,0 +1,35 @@
+{
+  "MER12345": {
+    "status": "In Transit",
+    "origin": "Chicago, IL",
+    "destination": "Los Angeles, CA",
+    "eta": "2024-07-20",
+    "history": [
+      { "date": "2024-07-15", "event": "Pickup from shipper" },
+      { "date": "2024-07-16", "event": "Departed Chicago hub" },
+      { "date": "2024-07-18", "event": "Arrived Phoenix sorting facility" }
+    ]
+  },
+  "MER67890": {
+    "status": "Delivered",
+    "origin": "New York, NY",
+    "destination": "Miami, FL",
+    "eta": "2024-07-10",
+    "history": [
+      { "date": "2024-07-06", "event": "Pickup from shipper" },
+      { "date": "2024-07-08", "event": "Arrived Miami distribution center" },
+      { "date": "2024-07-10", "event": "Delivered to recipient" }
+    ]
+  },
+  "MER11223": {
+    "status": "Out for Delivery",
+    "origin": "Dallas, TX",
+    "destination": "Houston, TX",
+    "eta": "2024-07-19",
+    "history": [
+      { "date": "2024-07-18", "event": "Pickup from shipper" },
+      { "date": "2024-07-19", "event": "Arrived Houston terminal" },
+      { "date": "2024-07-19", "event": "Out for delivery" }
+    ]
+  }
+}
