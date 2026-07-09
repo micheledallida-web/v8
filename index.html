@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XPO Logistics - Enterprise Landing Page</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3EX%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-background: #FFFFFF;
+            --color-secondary-background: #F7F8FA;
+            --color-dark-sections: #222222;
+            --color-primary-text: #111111;
+            --color-secondary-text: #666666;
+            --color-accent-green: #2FB34A;
+            --color-borders: #E5E7EB;
+
+            --font-family-primary: 'Montserrat', sans-serif;
+            --font-family-secondary: 'Roboto', sans-serif;
+
+            --font-size-hero: 4.5rem; /* 72px */
+            --font-size-section-title: 3rem; /* 48px */
+            --font-size-subtitle: 1.375rem; /* 22px */
+            --font-size-body: 1.125rem; /* 18px */
+            --font-size-buttons: 1rem; /* 16px */
+
+            --spacing-xxl: 6rem;
+            --spacing-xl: 4rem;
+            --spacing-lg: 3rem;
+            --spacing-md: 2rem;
+            --spacing-sm: 1.5rem;
+            --spacing-xs: 1rem;
+        }
+
+        /* Base Styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-family-secondary);
+            line-height: 1.6;
+            color: var(--color-primary-text);
+            background-color: var(--color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--color-primary-text);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-family-primary);
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-primary-text);
+        }
+
+        h1 {
+            font-size: var(--font-size-hero);
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: var(--font-size-section-title);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        h3 {
+            font-size: var(--font-size-subtitle);
+        }
+
+        p {
+            font-size: var(--font-size-body);
+            color: var(--color-secondary-text);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-size: var(--font-size-buttons);
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-family: var(--font-family-primary);
+        }
+
+        .btn-primary {
+            background-color: var(--color-accent-green);
+            color: var(--color-background);
+        }
+
+        .btn-primary:hover {
+            background-color: #248a3a;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-accent-green);
+            border-color: var(--color-accent-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(47, 179, 74, 0.1);
+            transform: scale(1.02);
+        }
+
+        .btn-dark {
+            background-color: var(--color-primary-text);
+            color: var(--color-background);
+        }
+
+        .btn-dark:hover {
+            background-color: #333333;
+            transform: scale(1.02);
+        }
+
+        section {
+            padding: var(--spacing-xxl) 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s ease, padding 0.3s ease;
+            padding: var(--spacing-xs) 0;
+        }
+
+        .header.transparent {
+            background-color: rgba(255, 255, 255, 0); /* Transparent over hero */
+            color: var(--color-background);
+        }
+
+        .header.transparent .nav-link {
+            color: var(--color-background);
+        }
+
+        .header.transparent .btn-secondary {
+            color: var(--color-background);
+            border-color: var(--color-background);
+        }
+
+        .header.scrolled {
+            background-color: var(--color-background);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 0.5rem 0;
+        }
+
+        .header.scrolled .nav-link,
+        .header.scrolled .header-action-link {
+            color: var(--color-primary-text);
+        }
+
+        .header.scrolled .btn-secondary {
+            color: var(--color-accent-green);
+            border-color: var(--color-accent-green);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: var(--font-size-subtitle);
+            font-weight: 700;
+            color: var(--color-primary-text);
+        }
+
+        .logo img {
+            height: 30px; /* Adjust as needed */
+            filter: brightness(0) invert(1); /* White logo for transparent header */
+            transition: filter 0.3s ease;
+        }
+
+        .header.scrolled .logo img {
+            filter: brightness(0) invert(0); /* Black logo for scrolled header */
+        }
+
+        .main-nav ul {
+            display: flex;
+        }
+
+        .main-nav li {
+            margin: 0 var(--spacing-xs);
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-accent-green);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .header-action-link {
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .header-action-link:hover {
+            color: var(--color-accent-green);
+        }
+
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: var(--spacing-lg);
+            cursor: pointer;
+            color: var(--color-background);
+        }
+
+        .header.scrolled .mobile-nav-toggle {
+            color: var(--color-primary-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            color: var(--color-background);
+            text-align: center;
+            background: url('https://via.placeholder.com/1920x1080/000000/FFFFFF?text=XPO+Logistics+Hero') no-repeat center center/cover;
+            background-attachment: fixed; /* Parallax effect */
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Overlay */
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: var(--spacing-md);
+        }
+
+        .hero h1 {
+            color: var(--color-background);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .hero p {
+            font-size: var(--font-size-subtitle);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero-ctas {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero .btn-secondary {
+            color: var(--color-background);
+            border-color: var(--color-background);
+        }
+
+        .hero .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tracking-widget {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            display: flex;
+            gap: var(--spacing-xs);
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .tracking-widget input {
+            flex-grow: 1;
+            padding: 1rem;
+            border: 1px solid var(--color-borders);
+            border-radius: 4px;
+            font-size: var(--font-size-buttons);
+            color: var(--color-primary-text);
+        }
+
+        .tracking-widget input:focus {
+            outline: none;
+            border-color: var(--color-accent-green);
+            box-shadow: 0 0 0 2px rgba(47, 179, 74, 0.2);
+        }
+
+        /* Value Proposition */
+        .value-prop-section {
+            background-color: var(--color-secondary-background);
+        }
+
+        .value-prop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .value-card {
+            background-color: var(--color-background);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .value-card .icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--spacing-sm);
+            fill: var(--color-accent-green);
+        }
+
+        .value-card h3 {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .value-card p {
+            color: var(--color-secondary-text);
+        }
+
+        /* Why XPO */
+        .why-xpo-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xxl);
+            align-items: center;
+        }
+
+        .why-xpo-image img {
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .why-xpo-text h2 {
+            text-align: left;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            border: 1px solid var(--color-borders);
+            border-radius: 8px;
+            background-color: var(--color-secondary-background);
+        }
+
+        .stat-item .number {
+            font-size: var(--font-size-section-title);
+            font-weight: 700;
+            color: var(--color-accent-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item .label {
+            font-size: var(--font-size-body);
+            color: var(--color-primary-text);
+        }
+
+        /* Nationwide Network */
+        .network-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xxl);
+            align-items: center;
+            margin-bottom: var(--spacing-xxl);
+        }
+
+        .network-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .network-item:nth-child(even) .network-image {
+            order: 2;
+        }
+
+        .network-item:nth-child(even) .network-text {
+            order: 1;
+        }
+
+        .network-image img {
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .network-text h3 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .network-text p {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Fleet Capacity */
+        .fleet-capacity-section {
+            background-color: var(--color-dark-sections);
+            color: var(--color-background);
+            text-align: center;
+            background-image: url('https://via.placeholder.com/1920x800/222222/666666?text=Fleet+Capacity+Background');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .fleet-capacity-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .fleet-capacity-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .fleet-capacity-section h2 {
+            color: var(--color-background);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .fleet-capacity-section p {
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto var(--spacing-xl);
+            font-size: var(--font-size-subtitle);
+        }
+
+        .fleet-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .metric-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .metric-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .metric-item .number {
+            font-size: var(--font-size-section-title);
+            font-weight: 700;
+            color: var(--color-accent-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-item .label {
+            font-size: var(--font-size-body);
+            color: var(--color-background);
+        }
+
+        /* Technology */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .tech-card {
+            background-color: var(--color-secondary-background);
+            padding: var(--spacing-lg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .tech-card .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--spacing-md);
+            fill: var(--color-accent-green);
+        }
+
+        .tech-card h3 {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .tech-card p {
+            color: var(--color-secondary-text);
+        }
+
+        /* Industries Served */
+        .industry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .industry-card {
+            background-color: var(--color-background);
+            border: 1px solid var(--color-borders);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .industry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .industry-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .industry-card-content {
+            padding: var(--spacing-md);
+        }
+
+        .industry-card-content h3 {
+            font-size: var(--font-size-buttons);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        /* Customer Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .testimonial-card {
+            background-color: var(--color-secondary-background);
+            padding: var(--spacing-lg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-buttons);
+            color: var(--color-primary-text);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-top: auto;
+        }
+
+        .testimonial-author img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-accent-green);
+        }
+
+        .author-info strong {
+            display: block;
+            font-size: var(--font-size-buttons);
+            color: var(--color-primary-text);
+        }
+
+        .author-info span {
+            font-size: 0.875rem;
+            color: var(--color-secondary-text);
+        }
+
+        /* Careers */
+        .careers-section {
+            background: url('https://via.placeholder.com/1920x800/333333/999999?text=XPO+Careers+Background') no-repeat center center/cover;
+            background-attachment: fixed;
+            color: var(--color-background);
+            text-align: center;
+            position: relative;
+        }
+
+        .careers-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .careers-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .careers-section h2 {
+            color: var(--color-background);
+        }
+
+        .careers-section p {
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto var(--spacing-xl);
+            font-size: var(--font-size-subtitle);
+        }
+
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .career-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-lg);
+            border-radius: 8px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .career-card:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .career-card h3 {
+            color: var(--color-background);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .career-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: var(--font-size-buttons);
+        }
+
+        /* Final CTA */
+        .final-cta-section {
+            background-color: var(--color-accent-green);
+            color: var(--color-background);
+            text-align: center;
+            padding: var(--spacing-xxl) 0;
+            background-image: url('https://via.placeholder.com/1920x400/2FB34A/FFFFFF?text=Get+a+Quote+Today');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .final-cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Slightly darken for text readability */
+            z-index: 1;
+        }
+
+        .final-cta-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .final-cta-section h2 {
+            font-size: var(--font-size-section-title);
+            color: var(--color-background);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .final-cta-section p {
+            font-size: var(--font-size-subtitle);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--spacing-xl);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .final-cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+        }
+
+        .final-cta-section .btn {
+            border-color: var(--color-background);
+        }
+
+        .final-cta-section .btn-primary {
+            background-color: var(--color-background);
+            color: var(--color-accent-green);
+        }
+
+        .final-cta-section .btn-primary:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .final-cta-section .btn-secondary {
+            color: var(--color-background);
+        }
+
+        .final-cta-section .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--color-dark-sections);
+            color: rgba(255, 255, 255, 0.8);
+            padding: var(--spacing-xxl) 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .footer-logo {
+            font-size: var(--font-size-subtitle);
+            font-weight: 700;
+            color: var(--color-background);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-column h4 {
+            color: var(--color-background);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-buttons);
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column ul a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .footer-column ul a:hover {
+            color: var(--color-accent-green);
+        }
+
+        .social-media a {
+            display: inline-block;
+            margin-right: var(--spacing-sm);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: var(--spacing-lg);
+            transition: color 0.3s ease;
+        }
+
+        .social-media a:hover {
+            color: var(--color-accent-green);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: var(--spacing-xxl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Mobile Nav */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-dark-sections);
+            z-index: 1050;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .mobile-nav.is-open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-close {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            background: none;
+            border: none;
+            color: var(--color-background);
+            font-size: var(--spacing-xl);
+            cursor: pointer;
+        }
+
+        .mobile-nav ul {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .mobile-nav ul li {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mobile-nav .nav-link,
+        .mobile-nav .header-action-link {
+            color: var(--color-background);
+            font-size: var(--font-size-subtitle);
+        }
+
+        .mobile-nav .nav-link:hover,
+        .mobile-nav .header-action-link:hover {
+            color: var(--color-accent-green);
+        }
+
+        .mobile-nav .btn {
+            margin: var(--spacing-sm) 0;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            :root {
+                --font-size-hero: 3.5rem;
+                --font-size-section-title: 2.5rem;
+                --font-size-subtitle: 1.25rem;
+                --font-size-body: 1rem;
+            }
+
+            .main-nav, .header-actions > *:not(.btn) {
+                display: none;
+            }
+
+            .header-actions .btn {
+                padding: 0.75rem 1.5rem;
+            }
+
+            .mobile-nav-toggle {
+                display: block;
+            }
+
+            .why-xpo-content, .network-item {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+
+            .network-item:nth-child(even) .network-image {
+                order: unset;
+            }
+
+            .network-item:nth-child(even) .network-text {
+                order: unset;
+            }
+
+            .hero h1 {
+                font-size: var(--font-size-section-title);
+            }
+            .hero p {
+                font-size: var(--font-size-body);
+            }
+            .tracking-widget {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --font-size-hero: 2.8rem;
+                --font-size-section-title: 2rem;
+                --font-size-subtitle: 1.125rem;
+                --font-size-body: 0.9375rem;
+                --spacing-xxl: 4rem;
+                --spacing-xl: 3rem;
+                --spacing-lg: 2rem;
+                --spacing-md: 1.5rem;
+            }
+
+            h2 {
+                margin-bottom: var(--spacing-lg);
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+
+            .tracking-widget {
+                max-width: 90%;
+            }
+
+            .value-prop-grid, .stats-grid, .tech-grid, .industry-grid, .testimonials-grid, .career-grid, .footer-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .value-card, .stat-item, .metric-item, .tech-card, .industry-card, .testimonial-card, .career-card {
+                padding: var(--spacing-md);
+            }
+
+            .stat-item .number, .metric-item .number {
+                font-size: var(--font-size-section-title);
+            }
+            .final-cta-section h2 {
+                font-size: var(--font-size-subtitle);
+            }
+            .final-cta-section p {
+                font-size: var(--font-size-buttons);
+            }
+            .final-cta-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --font-size-hero: 2.2rem;
+                --font-size-section-title: 1.8rem;
+            }
+            .logo img {
+                height: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header transparent" id="header">
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <!-- XPO Logo (SVG or Image) -->
+                <img src="https://www.xpo.com/themes/custom/xpo/logo.svg" alt="XPO Logistics Logo">
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#solutions" class="nav-link">Solutions</a></li>
+                    <li><a href="#network" class="nav-link">Network</a></li>
+                    <li><a href="#technology" class="nav-link">Technology</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#careers" class="nav-link">Careers</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="#login" class="header-action-link">Customer Login</a>
+                <a href="#contact" class="header-action-link">Contact</a>
+                <a href="#quote" class="btn btn-secondary">Request Quote</a>
+                <button class="mobile-nav-toggle" aria-label="Open navigation menu">
+                    &#9776;
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-nav" id="mobile-nav">
+        <button class="mobile-nav-close" aria-label="Close navigation menu">&times;</button>
+        <ul>
+            <li><a href="#services" class="nav-link">Services</a></li>
+            <li><a href="#solutions" class="nav-link">Solutions</a></li>
+            <li><a href="#network" class="nav-link">Network</a></li>
+            <li><a href="#technology" class="nav-link">Technology</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#careers" class="nav-link">Careers</a></li>
+        </ul>
+        <a href="#login" class="btn btn-secondary">Customer Login</a>
+        <a href="#contact" class="btn btn-secondary">Contact</a>
+        <a href="#quote" class="btn btn-primary">Request Quote</a>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero fade-in">
+            <div class="hero-content">
+                <h1>Powering What's Next in Logistics</h1>
+                <p>Innovative solutions for a world in constant motion. Delivering your goods, everywhere.</p>
+                <div class="hero-ctas">
+                    <a href="#get-started" class="btn btn-primary">Get Started</a>
+                    <a href="#learn-more" class="btn btn-secondary">Learn More</a>
+                </div>
+                <form class="tracking-widget" onsubmit="alert('Tracking functionality is for demo purposes. Tracking number: ' + document.getElementById('tracking-input').value); return false;">
+                    <input type="text" id="tracking-input" placeholder="Enter your tracking number" aria-label="Tracking number input">
+                    <button type="submit" class="btn btn-primary">Track</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Value Proposition -->
+        <section id="services" class="value-prop-section fade-in">
+            <div class="container">
+                <h2>Our Core Value Propositions</h2>
+                <div class="value-prop-grid">
+                    <div class="value-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17H2V3h20v14zm0 0l-4 4H6l-4-4"></path></svg>
+                        <h3>Global Reach</h3>
+                        <p>Seamlessly connect with markets worldwide through our extensive network.</p>
+                    </div>
+                    <div class="value-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                        <h3>Cutting-Edge Tech</h3>
+                        <p>Leverage advanced AI and automation for optimized logistics performance.</p>
+                    </div>
+                    <div class="value-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <h3>Reliable Service</h3>
+                        <p>Count on consistent, on-time deliveries and exceptional customer support.</p>
+                    </div>
+                    <div class="value-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                        <h3>Sustainable Practices</h3>
+                        <p>Committed to eco-friendly operations and reduced environmental impact.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why XPO -->
+        <section id="about" class="fade-in">
+            <div class="container why-xpo-content">
+                <div class="why-xpo-image">
+                    <img src="https://via.placeholder.com/600x400/F7F8FA/111111?text=Why+XPO+Logistics" alt="About XPO Logistics">
+                </div>
+                <div class="why-xpo-text">
+                    <h2>Why Choose XPO?</h2>
+                    <p>XPO is a leading provider of freight transportation services, offering a comprehensive suite of solutions to meet the demands of modern commerce. With a focus on technology, efficiency, and customer satisfaction, we empower businesses to thrive.</p>
+                    <p>Our commitment to innovation and operational excellence ensures that your supply chain is not just managed, but optimized for success. Partner with XPO to unlock new possibilities for your business.</p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="number" data-target="50000">0</div>
+                            <div class="label">Global Employees</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number" data-target="100">0</div>
+                            <div class="label">Countries Served</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number" data-target="20">0</div>
+                            <div class="label">Billion in Annual Revenue</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number" data-target="99">0</div>
+                            <div class="label">% On-Time Delivery</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nationwide Network -->
+        <section id="network" class="fade-in value-prop-section">
+            <div class="container">
+                <h2>Our Nationwide Network</h2>
+                <div class="network-item">
+                    <div class="network-image">
+                        <img src="https://via.placeholder.com/600x400/E5E7EB/666666?text=North+America+Map" alt="North American Logistics Map">
+                    </div>
+                    <div class="network-text">
+                        <h3>Connecting North America</h3>
+                        <p>With an unparalleled footprint across the U.S., Canada, and Mexico, XPO delivers seamless freight solutions for domestic and cross-border shipments. Our integrated network ensures efficiency and reliability from coast to coast.</p>
+                        <p>From major metropolitan hubs to remote locations, we have the infrastructure and expertise to reach your customers wherever they are.</p>
+                        <a href="#network-coverage" class="btn btn-primary">View Coverage Map</a>
+                    </div>
+                </div>
+                <div class="network-item">
+                    <div class="network-image">
+                        <img src="https://via.placeholder.com/600x400/E5E7EB/666666?text=Global+Presence" alt="Global Logistics Operations">
+                    </div>
+                    <div class="network-text">
+                        <h3>Global Presence, Local Expertise</h3>
+                        <p>Beyond North America, XPO leverages a vast global network to provide international shipping and logistics services. Our local teams understand regional nuances, ensuring smooth customs clearance and efficient delivery worldwide.</p>
+                        <p>Whether by air, sea, or land, trust XPO to navigate the complexities of global trade for you.</p>
+                        <a href="#international-services" class="btn btn-secondary">Explore International Services</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fleet Capacity -->
+        <section class="fleet-capacity-section fade-in">
+            <div class="container">
+                <h2>Unmatched Fleet Capacity & Flexibility</h2>
+                <p>Access a vast, diverse fleet and flexible capacity solutions tailored to your unique freight needs. From LTL to full truckload, we move your cargo efficiently and reliably.</p>
+                <div class="fleet-metrics-grid">
+                    <div class="metric-item">
+                        <div class="number" data-target="50000">0+</div>
+                        <div class="label">Tractors</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="number" data-target="150000">0+</div>
+                        <div class="label">Trailers</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="number" data-target="900">0+</div>
+                        <div class="label">Service Centers</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="number" data-target="1">#1</div>
+                        <div class="label">LTL Provider in North America</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology -->
+        <section id="technology" class="fade-in">
+            <div class="container">
+                <h2>Innovation Driving Logistics Forward</h2>
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                        <h3>Digital Shipping Tools</h3>
+                        <p>Our intuitive online platform provides real-time visibility, instant quotes, and simplified booking for all your shipments.</p>
+                    </div>
+                    <div class="tech-card">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle><path d="M2 12h2m16 0h2M12 2v2m0 16v2m-6.36-6.36l1.41-1.41M19.79 19.79l-1.41-1.41m-1.41 1.41l-1.41-1.41m-4.95-4.95l-1.41-1.41"></path></svg>
+                        <h3>AI & Automation Capabilities</h3>
+                        <p>Leverage artificial intelligence and advanced automation for predictive analytics, route optimization, and operational efficiency.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Industries Served -->
+        <section id="solutions" class="fade-in value-prop-section">
+            <div class="container">
+                <h2>Industries We Serve</h2>
+                <div class="industry-grid">
+                    <div class="industry-card">
+                        <img src="https://via.placeholder.com/400x200/F7F8FA/666666?text=Retail" alt="Retail Logistics">
+                        <div class="industry-card-content">
+                            <h3>Retail & E-commerce</h3>
+                            <p>Fast, flexible, and scalable solutions for dynamic retail supply chains.</p>
+                        </div>
+                    </div>
+                    <div class="industry-card">
+                        <img src="https://via.placeholder.com/400x200/F7F8FA/666666?text=Automotive" alt="Automotive Logistics">
+                        <div class="industry-card-content">
+                            <h3>Automotive</h3>
+                            <p>Precise, just-in-time delivery for complex automotive manufacturing.</p>
+                        </div>
+                    </div>
+                    <div class="industry-card">
+                        <img src="https://via.placeholder.com/400x200/F7F8FA/666666?text=Food+Beverage" alt="Food & Beverage Logistics">
+                        <div class="industry-card-content">
+                            <h3>Food & Beverage</h3>
+                            <p>Temperature-controlled transport and strict compliance for perishables.</p>
+                        </div>
+                    </div>
+                    <div class="industry-card">
+                        <img src="https://via.placeholder.com/400x200/F7F8FA/666666?text=Manufacturing" alt="Manufacturing Logistics">
+                        <div class="industry-card-content">
+                            <h3>Manufacturing</h3>
+                            <p>Optimizing inbound and outbound logistics for industrial production.</p>
+                        </div>
+                    </div>
+                    <div class="industry-card">
+                        <img src="https://via.placeholder.com/400x200/F7F8FA/666666?text=Healthcare" alt="Healthcare Logistics">
+                        <div class="industry-card-content">
+                            <h3>Healthcare</h3>
+                            <p>Secure, compliant, and timely delivery of medical supplies and equipment.</p>
+                        </div>
+                    </div>
+                    <div class="industry-card">
+                        <img src="https://via.placeholder.com/400x200/F7F8FA/666666?text=Technology" alt="Technology Logistics">
+                        <div class="industry-card-content">
+                            <h3>Technology</h3>
+                            <p>Handling high-value electronics with care and specialized security measures.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Testimonials -->
+        <section class="fade-in">
+            <div class="container">
+                <h2>What Our Customers Say</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p>"XPO's dedication to service and innovative solutions have significantly streamlined our supply chain. Their team is always responsive and proactive."</p>
+                        <div class="testimonial-author">
+                            <img src="https://via.placeholder.com/60x60/CCCCCC/FFFFFF?text=JD" alt="Customer Avatar">
+                            <div class="author-info">
+                                <strong>Jane Doe</strong>
+                                <span>Logistics Manager, Tech Solutions Inc.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p>"Reliable, efficient, and always on time. XPO has been an invaluable partner in managing our complex freight requirements across the continent."</p>
+                        <div class="testimonial-author">
+                            <img src="https://via.placeholder.com/60x60/CCCCCC/FFFFFF?text=MS" alt="Customer Avatar">
+                            <div class="author-info">
+                                <strong>Mark Smith</strong>
+                                <span>Operations Director, Global Retail Co.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p>"The technology XPO provides for tracking and managing shipments is simply the best in the industry. It gives us peace of mind."</p>
+                        <div class="testimonial-author">
+                            <img src="https://via.placeholder.com/60x60/CCCCCC/FFFFFF?text=AJ" alt="Customer Avatar">
+                            <div class="author-info">
+                                <strong>Anna Johnson</strong>
+                                <span>Supply Chain VP, Auto Parts Corp.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Careers -->
+        <section id="careers" class="careers-section fade-in">
+            <div class="container">
+                <h2>Build Your Career with XPO</h2>
+                <p>Join a team that's redefining logistics. Discover exciting opportunities to innovate, grow, and make a real impact on a global scale.</p>
+                <div class="career-grid">
+                    <div class="career-card">
+                        <h3>Freight Operations Specialist</h3>
+                        <p>Manage daily freight movements and ensure operational excellence.</p>
+                        <a href="#" class="btn btn-primary">Apply Now</a>
+                    </div>
+                    <div class="career-card">
+                        <h3>Software Engineer (Logistics AI)</h3>
+                        <p>Develop cutting-edge AI solutions to optimize our supply chain technologies.</p>
+                        <a href="#" class="btn btn-primary">Apply Now</a>
+                    </div>
+                    <div class="career-card">
+                        <h3>Sales Executive</h3>
+                        <p>Drive growth by building strong customer relationships and expanding our client base.</p>
+                        <a href="#" class="btn btn-primary">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Call-to-Action -->
+        <section id="quote" class="final-cta-section fade-in">
+            <div class="container">
+                <h2>Ready to Optimize Your Logistics?</h2>
+                <p>Get a personalized quote and discover how XPO can transform your supply chain for unmatched efficiency and reliability.</p>
+                <div class="final-cta-buttons">
+                    <a href="#request-quote" class="btn btn-primary">Request a Quote</a>
+                    <a href="#contact-us" class="btn btn-secondary">Contact Us</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Enterprise Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-column">
+                <a href="#" class="footer-logo">XPO</a>
+                <p>&copy; 2023 XPO, Inc. All rights reserved.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#news">Newsroom</a></li>
+                    <li><a href="#investors">Investors</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#ltl">Less-Than-Truckload</a></li>
+                    <li><a href="#truckload">Full Truckload</a></li>
+                    <li><a href="#intermodal">Intermodal</a></li>
+                    <li><a href="#global">Global Forwarding</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#case-studies">Case Studies</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#support">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Legal & Social</h4>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Use</a></li>
+                    <li><a href="#accessibility">Accessibility</a></li>
+                </ul>
+                <div class="social-media">
+                    <a href="#facebook" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                    <a href="#twitter" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c11 3 21-1 21-11.5a9.13 9.13 0 0 0-2.3-6.29 9.68 9.68 0 0 0 .01-1.09z"></path></svg></a>
+                    <a href="#linkedin" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>XPO and the XPO logo are trademarks of XPO, Inc. or its affiliates. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.getElementById('header');
+            const mobileNav = document.getElementById('mobile-nav');
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+            const mobileNavClose = document.querySelector('.mobile-nav-close');
+            const navLinks = document.querySelectorAll('.nav-link, .header-action-link, .mobile-nav a.btn');
+
+            // Sticky Header
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.remove('transparent');
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                    header.classList.add('transparent');
+                }
+            });
+
+            // Mobile Navigation Toggle
+            mobileNavToggle.addEventListener('click', () => {
+                mobileNav.classList.add('is-open');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when nav is open
+                mobileNav.style.display = 'flex'; // Make it visible for animation
+            });
+
+            mobileNavClose.addEventListener('click', () => {
+                mobileNav.classList.remove('is-open');
+                document.body.style.overflow = '';
+                setTimeout(() => { mobileNav.style.display = 'none'; }, 300); // Hide after animation
+            });
+
+            // Close mobile nav on link click
+            mobileNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileNav.classList.remove('is-open');
+                    document.body.style.overflow = '';
+                    setTimeout(() => { mobileNav.style.display = 'none'; }, 300);
+                });
+            });
+
+            // Smooth Scrolling for all internal links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#') && href.length > 1) {
+                        e.preventDefault();
+                        const targetId = href.substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            const headerOffset = header.offsetHeight;
+                            const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                            const offsetPosition = elementPosition - headerOffset;
+
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: "smooth"
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Fade-up Section Reveals
+            const sections = document.querySelectorAll('section.fade-in');
+
+            const sectionObserverOptions = {
+                root: null,
+                threshold: 0.1, // Trigger when 10% of the section is visible
+                rootMargin: '0px'
+            };
+
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Stop observing once visible
+                    }
+                });
+            }, sectionObserverOptions);
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+            // Counter Animations
+            const counters = document.querySelectorAll('.stat-item .number, .metric-item .number');
+
+            const counterObserverOptions = {
+                root: null,
+                threshold: 0.7, // Trigger when 70% of the counter is visible
+                rootMargin: '0px'
+            };
+
+            const animateCounter = (element) => {
+                const target = parseInt(element.dataset.target);
+                const isLTL = element.textContent.includes('LTL'); // Check for #1 LTL
+                const suffix = element.textContent.includes('+') ? '+' : '';
+
+                if (isLTL) {
+                    element.textContent = '#1';
+                    return;
+                }
+
+                let current = 0;
+                const duration = 2000; // 2 seconds
+                const start = performance.now();
+
+                const updateCount = (timestamp) => {
+                    const progress = (timestamp - start) / duration;
+                    if (progress < 1) {
+                        current = Math.min(target, Math.floor(target * progress));
+                        element.textContent = current.toLocaleString() + suffix;
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        element.textContent = target.toLocaleString() + suffix; // Ensure final value
+                    }
+                };
+                requestAnimationFrame(updateCount);
+            };
+
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, counterObserverOptions);
+
+            counters.forEach(counter => {
+                counterObserver.observe(counter);
+            });
+        });
+    </script>
+</body>
+</html>
