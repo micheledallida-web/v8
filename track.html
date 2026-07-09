@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Shipment | MeridianFreight</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="checkAuth()">
+    <nav>
+        <div class="logo">Meridian<span>Freight</span></div>
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <div class="track-box">
+        <h2>Track Your Shipment</h2>
+        <input type="text" id="trackingId" placeholder="Enter tracking number e.g. MER12345">
+        <button onclick="trackShipment()">Track</button>
+        <div id="results"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
