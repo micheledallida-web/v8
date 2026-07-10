@@ -6,7 +6,6 @@
     <title>Vantage Logistics - Enterprise Landing Page</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3EV%3C/text%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --color-background: #050608;
@@ -20,10 +19,6 @@
             --color-secondary-text: #AAB3C2;
             --color-muted-text: #727C89;
             --color-borders: rgba(255, 255, 255, 0.06);
-            --color-error: #F87171;
-            --color-error-bg: rgba(248, 113, 113, 0.08);
-            --color-error-border: rgba(248, 113, 113, 0.35);
-            --color-success: #34D399;
 
             --font-family-primary: 'Montserrat', sans-serif;
             --font-family-secondary: 'Roboto', sans-serif;
@@ -74,7 +69,468 @@
         ul { list-style: none; }
         
         h1, h2, h3, h4 { 
-            font-family: var(--font-family-primary); \n            font-weight: 700; \n            letter-spacing: -0.02em;\n            color: var(--color-primary-text); \n        }\n        h1 { font-size: var(--font-size-hero); line-height: 1.15; }\n        h2 { font-size: var(--font-size-section-title); text-align: center; margin-bottom: var(--spacing-lg); }\n        h3 { font-size: var(--font-size-subtitle); }\n        p { font-size: var(--font-size-body); color: var(--color-secondary-text); margin-bottom: var(--spacing-sm); }\n        \n        .cta-accent {\n            background: linear-gradient(135deg, #FFFFFF 0%, var(--color-accent-blue) 100%);\n            -webkit-background-clip: text;\n            -webkit-text-fill-color: transparent;\n        }\n\n        /* Unified Cinematic Sections */\n        section { \n            padding: var(--spacing-xxl) 0; \n            position: relative;\n            background-color: transparent;\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            opacity: 0;\n            transform: translateY(30px) scale(0.98);\n            filter: blur(10px);\n            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), \n                        transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), \n                        filter 0.8s cubic-bezier(0.25, 1, 0.5, 1);\n        }\n        section.is-visible { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }\n\n        .section-panel {\n            width: 100%;\n            max-width: 1200px;\n            margin: 0 auto;\n            padding: var(--spacing-xl) var(--spacing-lg);\n            background: var(--color-panel-background);\n            backdrop-filter: blur(20px);\n            -webkit-backdrop-filter: blur(20px);\n            border: 1px solid var(--color-borders); \n            border-radius: var(--panel-radius);\n            position: relative;\n            z-index: 2;\n            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);\n            overflow: hidden;\n        }\n\n        /* Atmospheric Background Elements */\n        .atmosphere {\n            position: absolute;\n            top: 0; left: 0; width: 100%; height: 100%;\n            pointer-events: none;\n            z-index: 1;\n            overflow: hidden;\n        }\n        .atmosphere-glow {\n            position: absolute;\n            width: 80%; height: 70%;\n            top: -10%; left: 10%;\n            background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.08), transparent 65%);\n            filter: blur(60px);\n        }\n        .atmosphere-vignette {\n            position: absolute; \n            top: 0; left: 0; width: 100%; height: 100%;\n            background: radial-gradient(circle at center, transparent 30%, rgba(5, 6, 8, 0.6) 100%);\n        }\n\n        /* Master Button System */\n        .cta-glow-btn {\n            display: inline-flex; \n            align-items: center; \n            gap: 0.85rem; \n            height: 64px;\n            padding: 0 2.5rem;\n            border-radius: 999px; \n            border: 1px solid var(--color-accent-blue); \n            color: var(--color-primary-text);\n            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.25) 100%);\n            font-family: var(--font-family-primary); \n            font-weight: 700; \n            text-transform: uppercase;\n            letter-spacing: 0.05em; \n            font-size: var(--font-size-buttons); \n            box-shadow: 0 0 30px rgba(59, 130, 246, 0.25);\n            transition: box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), \n                        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), \n                        background 0.4s cubic-bezier(0.25, 1, 0.5, 1);\n            cursor: pointer;\n            white-space: nowrap;\n        }\n        .cta-glow-btn:hover { \n            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.4) 100%);\n            box-shadow: 0 0 45px rgba(59, 130, 246, 0.45); \n            transform: translateY(-3px); \n        }\n        .cta-glow-btn:disabled {\n            opacity: 0.55;\n            cursor: not-allowed;\n            transform: none;\n            box-shadow: none;\n        }\n        .cta-glow-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }\n        .cta-glow-btn .cta-chevron { transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }\n        .cta-glow-btn:hover .cta-chevron { transform: translateX(6px); }\n\n        .cta-glow-btn-secondary {\n            border-color: var(--color-borders);\n            background: rgba(255, 255, 255, 0.02);\n            box-shadow: none;\n        }\n        .cta-glow-btn-secondary:hover {\n            background: rgba(255, 255, 255, 0.05);\n            border-color: rgba(255, 255, 255, 0.15);\n            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);\n        }\n\n        .premium-icon-wrapper {\n            width: 64px; height: 64px; \n            border-radius: 50%; \n            margin: 0 auto var(--spacing-sm);\n            background: rgba(59, 130, 246, 0.06); \n            border: 1px solid rgba(59, 130, 246, 0.25);\n            display: flex; align-items: center; justify-content: center;\n            position: relative;\n            box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);\n        }\n        .premium-icon-wrapper::after {\n            content: ''; position: absolute; width: 100%; height: 100%;\n            border-radius: 50%; background: var(--color-accent-blue);\n            filter: blur(12px); opacity: 0.2; top: 0; left: 0; z-index: 1;\n        }\n        .premium-icon-wrapper svg { width: 24px; height: 24px; stroke: var(--color-accent-blue); stroke-width: 2; fill: none; position: relative; z-index: 2; }\n\n        .premium-capsule {\n            display: inline-flex; align-items: center; gap: 0.75rem;\n            background: rgba(255, 255, 255, 0.02);\n            border: 1px solid var(--color-borders);\n            border-radius: 999px;\n            padding: 0.65rem 1.5rem 0.65rem 0.65rem;\n            margin-bottom: var(--spacing-md);\n            backdrop-filter: blur(10px);\n            -webkit-backdrop-filter: blur(10px);\n            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);\n        }\n        .premium-capsule-icon {\n            width: 36px; height: 36px; border-radius: 50%;\n            background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);\n            display: flex; align-items: center; justify-content: center;\n        }\n        .premium-capsule-icon svg { width: 16px; height: 16px; fill: var(--color-accent-blue); filter: drop-shadow(0 0 6px var(--color-accent-blue)); }\n        .premium-capsule-divider { width: 1px; height: 18px; background-color: var(--color-borders); }\n        .premium-capsule span:last-child { font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary-text); }\n\n        .premium-card {\n            background: rgba(15, 20, 30, 0.45);\n            border: 1px solid var(--color-borders);\n            border-radius: var(--card-radius);\n            padding: var(--spacing-md);\n            backdrop-filter: blur(10px);\n            -webkit-backdrop-filter: blur(10px);\n            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), \n                        border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1), \n                        box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);\n        }\n        .premium-card:hover {\n            transform: translateY(-6px);\n            border-color: rgba(59, 130, 246, 0.35);\n            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.1), inset 0 0 15px rgba(59, 130, 246, 0.05);\n        }\n\n        .header { \n            position: fixed; top: 24px; left: 50%; transform: translateX(-50%); \n            width: calc(100% - 48px); max-width: 1200px; height: 72px; z-index: 1000; \n            display: flex; align-items: center; \n            background: rgba(12, 16, 24, 0.7);\n            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);\n            border: 1px solid var(--color-borders); border-radius: 20px;\n            padding: 0 var(--spacing-md);\n            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);\n            transition: all 0.4s ease;\n        }\n        .header.scrolled {\n            background: rgba(5, 6, 8, 0.85);\n            border-color: rgba(59, 130, 246, 0.2);\n            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.1);\n        }\n        .header-content { display: flex; justify-content: space-between; align-items: center; width: 100%; }\n        \n        .logo { \n            font-size: var(--font-size-subtitle); font-weight: 700; letter-spacing: 0.04em; \n            color: var(--color-primary-text); text-shadow: 0 0 15px rgba(255,255,255,0.1);\n        }\n        .logo span { color: var(--color-accent-blue); text-shadow: 0 0 15px var(--color-accent-blue); }\n\n        .main-nav ul { display: flex; gap: var(--spacing-xs); }\n        .nav-link { \n            position: relative; padding: 0.5rem 0.25rem; font-weight: 600; font-size: 0.9rem; \n            color: var(--color-secondary-text); letter-spacing: 0.02em;\n        }\n        .nav-link:hover { color: var(--color-primary-text); }\n        .nav-link::after {\n            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;\n            background: var(--color-accent-blue); transform: scaleX(0); transform-origin: right;\n            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);\n            box-shadow: 0 0 8px var(--color-accent-blue);\n        }\n        .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }\n\n        .header-actions { display: flex; align-items: center; gap: var(--spacing-md); }\n        .header-action-link { font-weight: 600; font-size: 0.9rem; color: var(--color-secondary-text); cursor: pointer; }\n        .header-action-link:hover { color: var(--color-primary-text); }\n        .header .cta-glow-btn { height: 46px; padding: 0 1.5rem; font-size: 0.8rem; box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }\n\n        .mobile-nav-toggle { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: #FFFFFF; }\n\n        .cinematic-menu-overlay {\n            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;\n            background: radial-gradient(circle at 50% 30%, rgba(9, 15, 30, 0.96), #050608 100%);\n            z-index: 1050; display: flex; flex-direction: column;\n            justify-content: center; align-items: center; padding: var(--spacing-md);\n            opacity: 0; visibility: hidden; pointer-events: none;\n            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);\n            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.5s cubic-bezier(0.25, 1, 0.5, 1);\n        }\n        .cinematic-menu-overlay.is-open { opacity: 1; visibility: visible; pointer-events: auto; }\n        \n        .cinematic-menu-close {\n            position: absolute; top: 32px; right: 32px; background: none; border: none;\n            color: var(--color-muted-text); font-size: 2rem; cursor: pointer; transition: color 0.3s;\n        }\n        .cinematic-menu-close:hover { color: var(--color-primary-text); }\n\n        .cinematic-menu-list { text-align: center; display: flex; flex-direction: column; gap: var(--spacing-sm); width: 100%; max-width: 320px; }\n        .cinematic-menu-item {\n            font-family: var(--font-family-primary); font-weight: 700; font-size: var(--font-size-subtitle);\n            color: var(--color-secondary-text); letter-spacing: -0.01em; display: block; padding: 0.5rem 0;\n            transition: transform 0.4s ease, color 0.4s ease; cursor: pointer;\n        }\n        .cinematic-menu-item:hover { color: var(--color-primary-text); transform: scale(1.04); }\n        .cinematic-menu-item.accent-link { color: var(--color-accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }\n\n        .cinematic-menu-divider {\n            width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--color-borders), transparent);\n            margin: var(--spacing-xs) 0;\n        }\n        .cinematic-menu-list .cta-glow-btn { width: 100%; justify-content: center; }\n\n        .hero {\n            min-height: 100vh; padding-top: calc(var(--header-height) + 40px);\n            background: \n                radial-gradient(circle at 50% 30%, rgba(9, 15, 30, 0.6), var(--color-background) 75%),\n                linear-gradient(to bottom, rgba(5, 6, 8, 0.4), var(--color-background)),\n                url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;\n            background-attachment: fixed;\n            display: flex; align-items: center; justify-content: center; opacity: 1; transform: none; filter: none;\n        }\n        .hero-content { position: relative; z-index: 5; max-width: 850px; text-align: center; padding: 0 var(--spacing-md); }\n        .hero h1 { margin-bottom: var(--spacing-md); text-shadow: 0 10px 30px rgba(0,0,0,0.5); }\n        .hero p { font-size: var(--font-size-subtitle); color: var(--color-secondary-text); max-width: 650px; margin: 0 auto var(--spacing-xl); }\n        .hero-ctas { display: flex; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-xl); }\n\n        /* Glass Tracking Widget */\n        .tracking-widget {\n            background: rgba(12, 16, 24, 0.65);\n            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);\n            padding: 10px; border-radius: 20px; border: 1px solid var(--color-borders);\n            display: flex; gap: 10px; max-width: 620px; margin: 0 auto;\n            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);\n        }\n        .tracking-widget input { \n            flex-grow: 1; padding: 0 1.5rem; height: 54px; background: rgba(0,0,0,0.25);\n            border: 1px solid var(--color-borders); border-radius: 12px; \n            font-size: 1rem; color: var(--color-primary-text); font-family: var(--font-family-secondary);\n        }\n        .tracking-widget input:focus { outline: none; border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }\n        .tracking-widget .cta-glow-btn { height: 54px; border-radius: 12px; box-shadow: none; }\n\n        .value-prop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-md); }\n        .value-card { text-align: left; padding: var(--spacing-lg) var(--spacing-md); }\n        .value-card h3 { margin: var(--spacing-sm) 0 var(--spacing-xs); }\n        .value-card p { margin-bottom: 0; }\n\n        .about-panel { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl); align-items: center; text-align: left; }\n        .about-visual { position: relative; width: 100%; height: 380px; display: flex; align-items: center; justify-content: center; }\n        .vision-sphere { \n            position: absolute; width: 280px; height: 280px;\n            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.2) 0%, rgba(5, 6, 8, 0.8) 100%);\n            border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 50%;\n            box-shadow: 0 0 60px rgba(59, 130, 246, 0.2), inset 0 0 40px rgba(59, 130, 246, 0.1);\n            animation: float-sphere 8s ease-in-out infinite;\n        }\n        @keyframes float-sphere { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.02); } }\n        .about-panel h2 { text-align: left; margin-bottom: var(--spacing-sm); }\n        .about-panel p { margin-bottom: var(--spacing-md); }\n\n        .network-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: var(--spacing-xl); align-items: center; text-align: left; }\n        \n        /* PREMIUM ANIMATED INTERACTIVE LOGISTICS CORRIDORS SVG MAP */\n        .route-map-panel {\n            background: rgba(5, 6, 8, 0.4); border: 1px solid var(--color-borders);\n            border-radius: var(--card-radius); padding: var(--spacing-md); position: relative;\n            overflow: hidden;\n        }\n        .route-map-panel::after {\n            content: ''; position: absolute; width: 100%; height: 100%; top:0; left:0;\n            background: radial-gradient(circle at center, transparent 40%, rgba(9,11,16,0.6) 100%);\n            pointer-events: none;\n        }\n        @keyframes map-sway {\n            0%, 100% { transform: translate(0, 0) rotate(0deg); }\n            50% { transform: translate(4px, -6px) rotate(0.6deg); }\n        }\n        .route-map {\n            animation: map-sway 12s ease-in-out infinite;\n            transform-origin: center center;\n        }\n        @keyframes route-flow {\n            to { stroke-dashoffset: -20; }\n        }\n        .route-line {\n            stroke-dasharray: 6 6;\n            animation: route-flow 3s linear infinite;\n        }\n        @keyframes ring-pulse {\n            0% { r: 5; opacity: 0.9; stroke-width: 1px; }\n            50% { opacity: 0.4; }\n            100% { r: 26; opacity: 0; stroke-width: 2px; } \n        }\n        .pulse-ring {\n            fill: none;\n            transform-origin: center;\n            animation: ring-pulse 3.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;\n        }\n        .pulse-blue { stroke: #3B82F6; filter: drop-shadow(0 0 4px #3B82F6); }\n        .pulse-purple { stroke: #A855F7; filter: drop-shadow(0 0 4px #A855F7); }\n        .pulse-green { stroke: #10B981; filter: drop-shadow(0 0 4px #10B981); }\n\n        .network-text h3 { margin-bottom: var(--spacing-xs); }\n        .network-text p { margin-bottom: var(--spacing-md); }\n        .network-actions { display: flex; flex-direction: column; gap: var(--spacing-xs); align-items: flex-start; margin-top: var(--spacing-md); }\n\n        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: var(--spacing-lg); }\n        .tech-card { text-align: left; position: relative; overflow: hidden; padding: var(--spacing-lg); }\n        .tech-card::before {\n            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;\n            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.02), transparent);\n            pointer-events: none;\n        }\n        .tech-card h3 { margin: var(--spacing-sm) 0 var(--spacing-xs); }\n\n        .career-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg); }\n        .career-card { text-align: left; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }\n        .career-card h3 { margin-bottom: var(--spacing-xs); }\n        .career-card p { margin-bottom: var(--spacing-md); font-size: 1rem; color: var(--color-secondary-text); }\n        .career-card .cta-glow-btn { align-self: flex-start; height: 48px; padding: 0 1.75rem; font-size: 0.8rem; }\n\n        .final-cta-section {\n            background:\n                radial-gradient(ellipse 60% 50% at 50% 0%, rgba(59, 130, 246, 0.16), transparent 70%),\n                linear-gradient(180deg, #0A0A0A 0%, #050505 100%);\n            color: #FFFFFF; text-align: center; padding: var(--spacing-xxl) 0;\n            position: relative; overflow: hidden;\n            border-top: 1px solid var(--color-borders); border-bottom: 1px solid var(--color-borders);\n        }\n        .cta-glow-line {\n            position: absolute; height: 1px; width: 160%; left: -30%;\n            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.45), transparent);\n            filter: blur(1px);\n        }\n        .cta-glow-line-1 { bottom: 22%; transform: rotate(-2.5deg); opacity: 0.6; }\n        .cta-glow-line-2 { bottom: 12%; transform: rotate(2deg); opacity: 0.35; }\n        .final-cta-section .container { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; padding: 0 var(--spacing-md); }\n        .final-cta-badge {\n            width: 64px; height: 64px; margin: 0 auto var(--spacing-lg); border-radius: 18px;\n            background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.4);\n            display: flex; align-items: center; justify-content: center;\n            box-shadow: 0 0 35px rgba(59, 130, 246, 0.3); \n        }\n        .final-cta-badge svg {\n            width: 30px; height: 30px; fill: var(--color-accent-blue);\n            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.75));\n        }\n        .final-cta-section h2 { font-size: var(--font-size-section-title); color: #FFFFFF; margin-bottom: var(--spacing-md); }\n        .final-cta-section h2 .cta-accent { color: var(--color-accent-blue); }\n        .final-cta-section p { font-size: var(--font-size-subtitle); color: rgba(255, 255, 255, 0.7); margin-bottom: var(--spacing-xl); max-width: 640px; margin-left: auto; margin-right: auto; }\n\n        .final-cta-features { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-xl); }\n        .feature-pill {\n            display: flex; align-items: center; gap: 0.75rem; text-align: left;\n            background-color: rgba(255, 255, 255, 0.03); border: 1px solid var(--color-borders);\n            border-radius: 999px; padding: 0.6rem 1.4rem 0.6rem 0.6rem;\n        }\n        .feature-pill .feature-icon {\n            width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;\n            background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);\n            display: flex; align-items: center; justify-content: center;\n        }\n        .feature-pill .feature-icon svg { width: 18px; height: 18px; stroke: var(--color-accent-blue); }\n        .feature-copy strong { display: block; font-family: var(--font-family-primary); font-size: 0.95rem; color: #FFFFFF; margin-bottom: 0; }\n        .feature-copy small { display: block; font-size: 0.8rem; color: var(--color-secondary-text); }\n\n        .final-cta-buttons { display: flex; justify-content: center; margin-bottom: var(--spacing-md); }\n        .final-cta-buttons .cta-glow-btn { border: 1px solid var(--color-accent-blue); color: var(--color-accent-blue); background: transparent; }\n        .final-cta-buttons .cta-glow-btn:hover { background-color: rgba(59, 130, 246, 0.1); box-shadow: 0 0 40px rgba(59, 130, 246, 0.5); }\n        .cta-note { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem !important; color: var(--color-secondary-text) !important; margin-bottom: 0 !important; }\n        .cta-note svg { width: 15px; height: 15px; stroke: var(--color-secondary-text); flex-shrink: 0; }\n\n        .footer { \n            background: linear-gradient(to bottom, var(--color-secondary-background), #020304); \n            border-top: 1px solid var(--color-borders);\n            padding: var(--spacing-xl) 0 var(--spacing-lg); \n            font-size: 0.9rem;\n            position: relative;\n        }\n        .footer::before {\n            content: ''; position: absolute; top: 0; left: 20%; width: 60%; height: 1px;\n            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.25), transparent); \n        }\n        .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: var(--spacing-xl); max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }\n        .footer-logo { font-size: var(--font-size-subtitle); font-weight: 700; color: #FFFFFF; margin-bottom: var(--spacing-sm); display: block; }\n        .footer-logo span { color: var(--color-accent-blue); }\n        .footer-column p { font-size: 0.9rem; color: var(--color-muted-text); }\n        .footer-column h4 { color: var(--color-primary-text); margin-bottom: var(--spacing-md); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; }\n        .footer-column ul li { margin-bottom: 0.85rem; }\n        .footer-column ul a { color: var(--color-secondary-text); font-size: 0.9rem; }\n        .footer-column ul a:hover { color: var(--color-accent-blue); }\n        .social-media { display: flex; gap: var(--spacing-xs); margin-top: var(--spacing-sm); }\n        .social-media a { color: var(--color-muted-text); }\n        .social-media a:hover { color: var(--color-accent-blue); }\n        .footer-bottom { text-align: center; margin-top: var(--spacing-xl); padding-top: var(--spacing-md); border-top: 1px solid var(--color-borders); color: var(--color-muted-text); font-size: 0.8rem; }\n\n        /* REPAIRED VISUAL STABILITY MODAL SCOPES */\n        .signup-modal-overlay {\n            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;\n            background-color: rgba(3, 4, 6, 0.85); z-index: 2000;\n            align-items: center; justify-content: center; padding: var(--spacing-md);\n            opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);\n        }\n        .signup-modal-overlay.is-open { display: flex !important; opacity: 1; }\n        .signup-modal { \n            background-color: var(--color-panel-background); border: 1px solid var(--color-borders);\n            border-radius: var(--card-radius); padding: var(--spacing-lg); max-width: 460px; width: 100%;\n            max-height: 88vh; display: flex; flex-direction: column;\n            position: relative; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);\n            transform: translateY(15px); transition: transform 0.3s ease;\n        }\n        .signup-modal-overlay.is-open .signup-modal { transform: translateY(0); }\n        .signup-modal h3 { margin-bottom: 0.5rem; }\n        .signup-modal p { color: var(--color-secondary-text); margin-bottom: var(--spacing-md); font-size: 0.95rem; }\n        .signup-modal-close { \n            position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none;\n            color: var(--color-muted-text); font-size: 1.75rem; cursor: pointer; transition: color 0.3s ease;\n            z-index: 3;\n        }\n        .signup-modal-close:hover { color: var(--color-primary-text); }\n\n        .modal-tabs { \n            position: relative; display: flex; background: rgba(0,0,0,0.2);\n            border: 1px solid var(--color-borders); border-radius: 999px; padding: 4px;\n            margin-bottom: var(--spacing-md); flex-shrink: 0;\n        }\n        #signup-modal-body {\n            overflow-y: auto; -webkit-overflow-scrolling: touch;\n            flex: 1 1 auto; min-height: 0; padding-right: 4px; margin-right: -4px;\n        }\n        .modal-tab { \n            flex: 1; position: relative; z-index: 2; background: none; border: none; cursor: pointer;\n            padding: 0.65rem 1rem; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem;\n            color: var(--color-secondary-text); border-radius: 999px; transition: color 0.3s ease;\n        }\n        .modal-tab.is-active { color: #FFFFFF; }\n        .modal-tab-indicator {\n            position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px);\n            background-color: var(--color-accent-blue); border-radius: 999px; z-index: 1;\n            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);\n            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);\n        }\n        .modal-tab-indicator.is-signin { transform: translateX(100%); }\n\n        .modal-panel { display: none !important; }\n        .modal-panel.is-active { display: block !important; animation: modal-panel-in 0.4s ease; }\n        @keyframes modal-panel-in { from { opacity: 0; transform: translateY(10px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }\n\n        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xs); }\n        .form-group { margin-bottom: var(--spacing-sm); }\n        .form-group label { display: block; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem; color: var(--color-secondary-text); margin-bottom: 0.5rem; }\n        .form-group input {\n            width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--color-borders) !important;\n            background-color: rgba(0,0,0,0.4) !important; color: #FFFFFF !important; font-family: var(--font-family-secondary);\n            font-size: 1rem; transition: border-color 0.3s;\n        }\n        .form-group input:focus { outline: none; border-color: var(--color-accent-blue) !important; }\n        .signup-submit-btn { width: 100%; margin-top: var(--spacing-xs); justify-content: center; }\n        .modal-switch-line { margin: var(--spacing-md) 0 0; text-align: center; font-size: 0.9rem; color: var(--color-muted-text); }\n        .modal-switch-link { color: var(--color-accent-blue); font-weight: 600; }\n        \n        .auth-error-banner {\n            display: none; align-items: flex-start; gap: 0.65rem;\n            background: var(--color-error-bg); border: 1px solid var(--color-error-border);\n            border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: var(--spacing-sm);\n            font-size: 0.88rem; color: #FCA5A5;\n        }\n        .auth-error-banner.is-visible { display: flex; }\n        .auth-error-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; stroke: var(--color-error); }\n        \n        .btn-spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; animation: btn-spin 0.7s linear infinite; margin-right: 8px; }\n        @keyframes btn-spin { to { transform: rotate(360deg); } }\n        .signup-success { text-align: center; padding: var(--spacing-md) 0; }\n        .signup-success svg { width: 56px; height: 56px; stroke: var(--color-accent-blue); margin-bottom: var(--spacing-sm); fill: none; }\n\n        @media (max-width: 1024px) {\n            :root { --font-size-hero: 3.2rem; --font-size-section-title: 2.25rem; --spacing-xxl: 5rem; --spacing-xl: 3.5rem; }\n            .header { top: 12px; width: calc(100% - 24px); }\n            .main-nav, .header-actions .header-action-link, .header-actions .cta-glow-btn { display: none; }\n            .mobile-nav-toggle { display: block; }\n            .about-panel, .network-grid { grid-template-columns: 1fr; gap: var(--spacing-lg); text-align: center; }\n            .about-panel h2, .network-text h3 { text-align: center; }\n            .about-visual { height: 240px; }\n            .network-actions { align-items: center; }\n            .footer-grid { grid-template-columns: 1fr; gap: var(--spacing-lg); text-align: center; }\n            .social-media { justify-content: center; }\n        }\n        @media (max-width: 768px) {\n            :root { --font-size-hero: 2.5rem; --font-size-section-title: 1.85rem; --spacing-xl: 2.5rem; --spacing-lg: 2rem; }\n            .section-panel { border-radius: var(--card-radius); padding: var(--spacing-lg) var(--spacing-md); }\n            .hero-ctas { flex-direction: column; align-items: center; gap: var(--spacing-xs); }\n            .hero-ctas .cta-glow-btn { width: 100%; max-width: 320px; justify-content: center; }\n            .tracking-widget { flex-direction: column; background: var(--color-panel-background); }\n            .tech-grid, .value-prop-grid, .career-grid { grid-template-columns: 1fr; }\n        }\n    </style>\n</head>
+            font-family: var(--font-family-primary); 
+            font-weight: 700; 
+            letter-spacing: -0.02em;
+            color: var(--color-primary-text); 
+        }
+        h1 { font-size: var(--font-size-hero); line-height: 1.15; }
+        h2 { font-size: var(--font-size-section-title); text-align: center; margin-bottom: var(--spacing-lg); }
+        h3 { font-size: var(--font-size-subtitle); }
+        p { font-size: var(--font-size-body); color: var(--color-secondary-text); margin-bottom: var(--spacing-sm); }
+        
+        .cta-accent {
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--color-accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Unified Cinematic Sections */
+        section { 
+            padding: var(--spacing-xxl) 0; 
+            position: relative;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+            filter: blur(10px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
+                        filter 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        section.is-visible { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+
+        .section-panel {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            background: var(--color-panel-background);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--color-borders);
+            border-radius: var(--panel-radius);
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        /* Atmospheric Background Elements */
+        .atmosphere {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .atmosphere-glow {
+            position: absolute;
+            width: 80%; height: 70%;
+            top: -10%; left: 10%;
+            background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.08), transparent 65%);
+            filter: blur(60px);
+        }
+        .atmosphere-vignette {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, rgba(5, 6, 8, 0.6) 100%);
+        }
+
+        /* Master Button System */
+        .cta-glow-btn {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.85rem; 
+            height: 64px;
+            padding: 0 2.5rem;
+            border-radius: 999px; 
+            border: 1px solid var(--color-accent-blue); 
+            color: var(--color-primary-text);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.25) 100%);
+            font-family: var(--font-family-primary); 
+            font-weight: 700; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em; 
+            font-size: var(--font-size-buttons); 
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.25);
+            transition: box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        background 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .cta-glow-btn:hover { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.4) 100%);
+            box-shadow: 0 0 45px rgba(59, 130, 246, 0.45); 
+            transform: translateY(-3px); 
+        }
+        .cta-glow-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+        .cta-glow-btn .cta-chevron { transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .cta-glow-btn:hover .cta-chevron { transform: translateX(6px); }
+
+        .cta-glow-btn-secondary {
+            border-color: var(--color-borders);
+            background: rgba(255, 255, 255, 0.02);
+            box-shadow: none;
+        }
+        .cta-glow-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Outline Icons Setup */
+        .premium-icon-wrapper {
+            width: 64px; height: 64px; 
+            border-radius: 50%; 
+            margin: 0 auto var(--spacing-sm);
+            background: rgba(59, 130, 246, 0.06); 
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
+        }
+        .premium-icon-wrapper::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; background: var(--color-accent-blue);
+            filter: blur(12px); opacity: 0.2; top: 0; left: 0; z-index: 1;
+        }
+        .premium-icon-wrapper svg { width: 24px; height: 24px; stroke: var(--color-accent-blue); stroke-width: 2; fill: none; position: relative; z-index: 2; }
+
+        /* Capsule Badges */
+        .premium-capsule {
+            display: inline-flex; align-items: center; gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--color-borders);
+            border-radius: 999px;
+            padding: 0.65rem 1.5rem 0.65rem 0.65rem;
+            margin-bottom: var(--spacing-md);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .premium-capsule-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .premium-capsule-icon svg { width: 16px; height: 16px; fill: var(--color-accent-blue); filter: drop-shadow(0 0 6px var(--color-accent-blue)); }
+        .premium-capsule-divider { width: 1px; height: 18px; background-color: var(--color-borders); }
+        .premium-capsule span:last-child { font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary-text); }
+
+        /* Unified Card Formats */
+        .premium-card {
+            background: rgba(15, 20, 30, 0.45);
+            border: 1px solid var(--color-borders);
+            border-radius: var(--card-radius);
+            padding: var(--spacing-md);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .premium-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(59, 130, 246, 0.35);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.1), inset 0 0 15px rgba(59, 130, 246, 0.05);
+        }
+
+        /* Floating Navbar Architecture */
+        .header { 
+            position: fixed; top: 24px; left: 50%; transform: translateX(-50%); 
+            width: calc(100% - 48px); max-width: 1200px; height: 72px; z-index: 1000; 
+            display: flex; align-items: center; 
+            background: rgba(12, 16, 24, 0.7);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--color-borders); border-radius: 20px;
+            padding: 0 var(--spacing-md);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+        }
+        .header.scrolled {
+            background: rgba(5, 6, 8, 0.85);
+            border-color: rgba(59, 130, 246, 0.2);
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.1);
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        .logo { 
+            font-size: var(--font-size-subtitle); font-weight: 700; letter-spacing: 0.04em; 
+            color: var(--color-primary-text); text-shadow: 0 0 15px rgba(255,255,255,0.1);
+        }
+        .logo span { color: var(--color-accent-blue); text-shadow: 0 0 15px var(--color-accent-blue); }
+
+        .main-nav ul { display: flex; gap: var(--spacing-xs); }
+        .nav-link { 
+            position: relative; padding: 0.5rem 0.25rem; font-weight: 600; font-size: 0.9rem; 
+            color: var(--color-secondary-text); letter-spacing: 0.02em;
+        }
+        .nav-link:hover { color: var(--color-primary-text); }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+            background: var(--color-accent-blue); transform: scaleX(0); transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 8px var(--color-accent-blue);
+        }
+        .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        .header-actions { display: flex; align-items: center; gap: var(--spacing-md); }
+        .header-action-link { font-weight: 600; font-size: 0.9rem; color: var(--color-secondary-text); cursor: pointer; }
+        .header-action-link:hover { color: var(--color-primary-text); }
+        .header .cta-glow-btn { height: 46px; padding: 0 1.5rem; font-size: 0.8rem; box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+
+        .mobile-nav-toggle { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: #FFFFFF; }
+
+        /* Cinematic Hero Architecture */
+        .hero {
+            min-height: 100vh; padding-top: calc(var(--header-height) + 40px);
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(9, 15, 30, 0.6), var(--color-background) 75%),
+                linear-gradient(to bottom, rgba(5, 6, 8, 0.4), var(--color-background)),
+                url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            background-attachment: fixed;
+            display: flex; align-items: center; justify-content: center; opacity: 1; transform: none; filter: none;
+        }
+        .hero-content { position: relative; z-index: 5; max-width: 850px; text-align: center; padding: 0 var(--spacing-md); }
+        .hero h1 { margin-bottom: var(--spacing-md); text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hero p { font-size: var(--font-size-subtitle); color: var(--color-secondary-text); max-width: 650px; margin: 0 auto var(--spacing-xl); }
+        .hero-ctas { display: flex; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-xl); }
+
+        /* Glass Tracking Widget */
+        .tracking-widget {
+            background: rgba(12, 16, 24, 0.65);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            padding: 10px; border-radius: 20px; border: 1px solid var(--color-borders);
+            display: flex; gap: 10px; max-width: 620px; margin: 0 auto;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .tracking-widget input { 
+            flex-grow: 1; padding: 0 1.5rem; height: 54px; background: rgba(0,0,0,0.25);
+            border: 1px solid var(--color-borders); border-radius: 12px; 
+            font-size: 1rem; color: var(--color-primary-text); font-family: var(--font-family-secondary);
+        }
+        .tracking-widget input:focus { outline: none; border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+        .tracking-widget .cta-glow-btn { height: 54px; border-radius: 12px; box-shadow: none; }
+
+        /* Core Values / Grid Layouts */
+        .value-prop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-md); }
+        .value-card { text-align: left; padding: var(--spacing-lg) var(--spacing-md); }
+        .value-card h3 { margin: var(--spacing-sm) 0 var(--spacing-xs); }
+        .value-card p { margin-bottom: 0; }
+
+        /* VisionOS Layout Structure */
+        .about-panel { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl); align-items: center; text-align: left; }
+        .about-visual { position: relative; width: 100%; height: 380px; display: flex; align-items: center; justify-content: center; }
+        .vision-sphere {
+            position: absolute; width: 280px; height: 280px;
+            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.2) 0%, rgba(5, 6, 8, 0.8) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 50%;
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.2), inset 0 0 40px rgba(59, 130, 246, 0.1);
+            animation: float-sphere 8s ease-in-out infinite;
+        }
+        @keyframes float-sphere { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.02); } }
+        .about-panel h2 { text-align: left; margin-bottom: var(--spacing-sm); }
+        .about-panel p { margin-bottom: var(--spacing-md); }
+
+        /* Premium Network Mapping */
+        .network-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: var(--spacing-xl); align-items: center; text-align: left; }
+        .route-map-panel {
+            background: rgba(5, 6, 8, 0.4); border: 1px solid var(--color-borders);
+            border-radius: var(--card-radius); padding: var(--spacing-md); position: relative;
+        }
+        .route-map-panel::after {
+            content: ''; position: absolute; width: 100%; height: 100%; top:0; left:0;
+            background: radial-gradient(circle at center, transparent 40%, rgba(9,11,16,0.6) 100%);
+            pointer-events: none;
+        }
+        .network-text h3 { margin-bottom: var(--spacing-xs); }
+        .network-text p { margin-bottom: var(--spacing-md); }
+        .network-actions { display: flex; flex-direction: column; gap: var(--spacing-xs); align-items: flex-start; margin-top: var(--spacing-md); }
+
+        /* Technology Modules */
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: var(--spacing-lg); }
+        .tech-card { text-align: left; position: relative; overflow: hidden; padding: var(--spacing-lg); }
+        .tech-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.02), transparent);
+            pointer-events: none;
+        }
+        .tech-card h3 { margin: var(--spacing-sm) 0 var(--spacing-xs); }
+
+        /* Careers Section Structuring */
+        .career-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg); }
+        .career-card { text-align: left; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .career-card h3 { margin-bottom: var(--spacing-xs); }
+        .career-card p { margin-bottom: var(--spacing-md); font-size: 1rem; color: var(--color-secondary-text); }
+        .career-card .cta-glow-btn { align-self: flex-start; height: 48px; padding: 0 1.75rem; font-size: 0.8rem; }
+
+        /* Master Design Blueprint Section */
+        .final-cta-section {
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 0%, rgba(59, 130, 246, 0.16), transparent 70%),
+                linear-gradient(180deg, #0A0A0A 0%, #050505 100%);
+            color: #FFFFFF; text-align: center; padding: var(--spacing-xxl) 0;
+            position: relative; overflow: hidden;
+            border-top: 1px solid var(--color-borders); border-bottom: 1px solid var(--color-borders);
+        }
+        .cta-glow-line {
+            position: absolute; height: 1px; width: 160%; left: -30%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.45), transparent);
+            filter: blur(1px);
+        }
+        .cta-glow-line-1 { bottom: 22%; transform: rotate(-2.5deg); opacity: 0.6; }
+        .cta-glow-line-2 { bottom: 12%; transform: rotate(2deg); opacity: 0.35; }
+        .final-cta-section .container { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; padding: 0 var(--spacing-md); }
+        .final-cta-badge {
+            width: 64px; height: 64px; margin: 0 auto var(--spacing-lg); border-radius: 18px;
+            background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 35px rgba(59, 130, 246, 0.3);
+        }
+        .final-cta-badge svg {
+            width: 30px; height: 30px; fill: var(--color-accent-blue);
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.75));
+        }
+        .final-cta-section h2 { font-size: var(--font-size-section-title); color: #FFFFFF; margin-bottom: var(--spacing-md); }
+        .final-cta-section h2 .cta-accent { color: var(--color-accent-blue); }
+        .final-cta-section p { font-size: var(--font-size-subtitle); color: rgba(255, 255, 255, 0.7); margin-bottom: var(--spacing-xl); max-width: 640px; margin-left: auto; margin-right: auto; }
+
+        .final-cta-features { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-xl); }
+        .feature-pill {
+            display: flex; align-items: center; gap: 0.75rem; text-align: left;
+            background-color: rgba(255, 255, 255, 0.03); border: 1px solid var(--color-borders);
+            border-radius: 999px; padding: 0.6rem 1.4rem 0.6rem 0.6rem;
+        }
+        .feature-pill .feature-icon {
+            width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+            background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .feature-pill .feature-icon svg { width: 18px; height: 18px; stroke: var(--color-accent-blue); }
+        .feature-copy strong { display: block; font-family: var(--font-family-primary); font-size: 0.95rem; color: #FFFFFF; margin-bottom: 0; }
+        .feature-copy small { display: block; font-size: 0.8rem; color: var(--color-secondary-text); }
+
+        .final-cta-buttons { display: flex; justify-content: center; margin-bottom: var(--spacing-md); }
+        .final-cta-buttons .cta-glow-btn { border: 1px solid var(--color-accent-blue); color: var(--color-accent-blue); background: transparent; }
+        .final-cta-buttons .cta-glow-btn:hover { background-color: rgba(59, 130, 246, 0.1); box-shadow: 0 0 40px rgba(59, 130, 246, 0.5); }
+        .cta-note { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem !important; color: var(--color-secondary-text) !important; margin-bottom: 0 !important; }
+        .cta-note svg { width: 15px; height: 15px; stroke: var(--color-secondary-text); flex-shrink: 0; }
+
+        /* Unified Cinematic Footer */
+        .footer { 
+            background: linear-gradient(to bottom, var(--color-secondary-background), #020304); 
+            border-top: 1px solid var(--color-borders);
+            padding: var(--spacing-xl) 0 var(--spacing-lg); 
+            font-size: 0.9rem;
+            position: relative;
+        }
+        .footer::before {
+            content: ''; position: absolute; top: 0; left: 20%; width: 60%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.25), transparent);
+        }
+        .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: var(--spacing-xl); max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }
+        .footer-logo { font-size: var(--font-size-subtitle); font-weight: 700; color: #FFFFFF; margin-bottom: var(--spacing-sm); display: block; }
+        .footer-logo span { color: var(--color-accent-blue); }
+        .footer-column p { font-size: 0.9rem; color: var(--color-muted-text); }
+        .footer-column h4 { color: var(--color-primary-text); margin-bottom: var(--spacing-md); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .footer-column ul li { margin-bottom: 0.85rem; }
+        .footer-column ul a { color: var(--color-secondary-text); font-size: 0.9rem; }
+        .footer-column ul a:hover { color: var(--color-accent-blue); }
+        .social-media { display: flex; gap: var(--spacing-xs); margin-top: var(--spacing-sm); }
+        .social-media a { color: var(--color-muted-text); }
+        .social-media a:hover { color: var(--color-accent-blue); }
+        .footer-bottom { text-align: center; margin-top: var(--spacing-xl); padding-top: var(--spacing-md); border-top: 1px solid var(--color-borders); color: var(--color-muted-text); font-size: 0.8rem; }
+
+        /* Modal Settings */
+        .signup-modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(3, 4, 6, 0.85); z-index: 2000;
+            align-items: center; justify-content: center; padding: var(--spacing-md);
+            opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        }
+        .signup-modal-overlay.is-open { display: flex; opacity: 1; }
+        .signup-modal {
+            background-color: var(--color-panel-background); border: 1px solid var(--color-borders);
+            border-radius: var(--card-radius); padding: var(--spacing-lg); max-width: 460px; width: 100%;
+            position: relative; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+            transform: translateY(15px); transition: transform 0.3s ease;
+        }
+        .signup-modal-overlay.is-open .signup-modal { transform: translateY(0); }
+        .signup-modal h3 { margin-bottom: 0.5rem; }
+        .signup-modal p { color: var(--color-secondary-text); margin-bottom: var(--spacing-md); font-size: 0.95rem; }
+        .signup-modal-close {
+            position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none;
+            color: var(--color-muted-text); font-size: 1.75rem; cursor: pointer; transition: color 0.3s ease;
+        }
+        .signup-modal-close:hover { color: var(--color-primary-text); }
+
+        .modal-tabs {
+            position: relative; display: flex; background: rgba(0,0,0,0.2);
+            border: 1px solid var(--color-borders); border-radius: 999px; padding: 4px;
+            margin-bottom: var(--spacing-md);
+        }
+        .modal-tab {
+            flex: 1; position: relative; z-index: 2; background: none; border: none; cursor: pointer;
+            padding: 0.65rem 1rem; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem;
+            color: var(--color-secondary-text); border-radius: 999px; transition: color 0.3s ease;
+        }
+        .modal-tab.is-active { color: #FFFFFF; }
+        .modal-tab-indicator {
+            position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px);
+            background-color: var(--color-accent-blue); border-radius: 999px; z-index: 1;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+        .modal-tab-indicator.is-signin { transform: translateX(100%); }
+
+        .modal-panel { display: none; }
+        .modal-panel.is-active { display: block; animation: modal-panel-in 0.4s ease; }
+        @keyframes modal-panel-in { from { opacity: 0; transform: translateY(10px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xs); }
+        .form-group { margin-bottom: var(--spacing-sm); }
+        .form-group label { display: block; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem; color: var(--color-secondary-text); margin-bottom: 0.5rem; }
+        .form-group input {
+            width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--color-borders);
+            background-color: rgba(0,0,0,0.3); color: var(--color-primary-text); font-family: var(--font-family-secondary);
+            font-size: 1rem; transition: border-color 0.3s;
+        }
+        .form-group input:focus { outline: none; border-color: var(--color-accent-blue); }
+        .signup-submit-btn { width: 100%; margin-top: var(--spacing-xs); justify-content: center; }
+        .modal-switch-line { margin: var(--spacing-md) 0 0; text-align: center; font-size: 0.9rem; color: var(--color-muted-text); }
+        .modal-switch-link { color: var(--color-accent-blue); font-weight: 600; }
+        
+        .signup-success { text-align: center; padding: var(--spacing-md) 0; }
+        .signup-success svg { width: 56px; height: 56px; stroke: var(--color-accent-blue); margin-bottom: var(--spacing-sm); }
+
+        /* Mobile Layout Stack Fixes */
+        @media (max-width: 1024px) {
+            :root { --font-size-hero: 3.2rem; --font-size-section-title: 2.25rem; --spacing-xxl: 5rem; --spacing-xl: 3.5rem; }
+            .header { top: 12px; width: calc(100% - 24px); }
+            .main-nav, .header-actions .header-action-link, .header-actions .cta-glow-btn { display: none; }
+            .mobile-nav-toggle { display: block; }
+            .about-panel, .network-grid { grid-template-columns: 1fr; gap: var(--spacing-lg); text-align: center; }
+            .about-panel h2, .network-text h3 { text-align: center; }
+            .about-visual { height: 240px; }
+            .network-actions { align-items: center; }
+            .footer-grid { grid-template-columns: 1fr; gap: var(--spacing-lg); text-align: center; }
+            .social-media { justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            :root { --font-size-hero: 2.5rem; --font-size-section-title: 1.85rem; --spacing-xl: 2.5rem; --spacing-lg: 2rem; }
+            .section-panel { border-radius: var(--card-radius); padding: var(--spacing-lg) var(--spacing-md); }
+            .hero-ctas { flex-direction: column; align-items: center; gap: var(--spacing-xs); }
+            .hero-ctas .cta-glow-btn { width: 100%; max-width: 320px; justify-content: center; }
+            .tracking-widget { flex-direction: column; background: var(--color-panel-background); }
+            .tech-grid, .value-prop-grid, .career-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
 <body>
 
     <header class="header" id="header">
@@ -95,28 +551,10 @@
                 <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
                     <span>Request Quote</span>
                 </button>
-                <button class="mobile-nav-toggle" id="menu-open-btn" aria-label="Open navigation menu">&#9776;</button>
+                <button class="mobile-nav-toggle" aria-label="Open navigation menu">&#9776;</button>
             </div>
         </div>
     </header>
-
-    <!-- FULLSCREEN DYNAMIC EXPANSION DRAWER OVERLAY -->
-    <div class="cinematic-menu-overlay" id="cinematic-menu">
-        <button class="cinematic-menu-close" id="menu-close-btn" aria-label="Close navigation menu">&times;</button>
-        <div class="cinematic-menu-list">
-            <span class="cinematic-menu-item close-redirect-link" data-anchor="#tracking-input">Track Shipment</span>
-            <span class="cinematic-menu-item close-redirect-link" data-anchor="#services">Services</span>
-            <span class="cinematic-menu-item close-redirect-link" data-anchor="#about">About</span>
-            <span class="cinematic-menu-item close-redirect-link" data-anchor="#careers">Careers</span>
-            <span class="cinematic-menu-item modal-trigger" data-target-tab="signup">Contact</span>
-            <span class="cinematic-menu-item modal-trigger accent-link" data-target-tab="signin">Customer Login</span>
-            <div class="cinematic-menu-divider"></div>
-            <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
-                <span>Request a Quote</span>
-                <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-        </div>
-    </div>
 
     <div class="signup-modal-overlay" id="signup-modal-overlay">
         <div class="signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-modal-title">
@@ -132,10 +570,6 @@
                 <div class="modal-panel is-active" data-panel="signup">
                     <h3 id="signup-modal-title">Get Started with Vantage</h3>
                     <p>Tell us a bit about you and our team will follow up right away.</p>
-                    <div class="auth-error-banner" id="signup-error-banner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        <span id="signup-error-text">Something went wrong.</span>
-                    </div>
                     <form id="signup-form">
                         <div class="form-row">
                             <div class="form-group">
@@ -155,12 +589,8 @@
                             <label for="signup-contact">Contact Number</label>
                             <input type="tel" id="signup-contact" name="contact" placeholder="+1 (555) 123-4567" required>
                         </div>
-                        <div class="form-group">
-                            <label for="signup-password">Password</label>
-                            <input type="password" id="signup-password" name="password" placeholder="••••••••" required>
-                        </div>
                         <button type="submit" class="cta-glow-btn signup-submit-btn">
-                            <span class="btn-label">Create Account</span>
+                            <span>Create Account</span>
                             <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </form>
@@ -170,10 +600,6 @@
                 <div class="modal-panel" data-panel="signin">
                     <h3>Welcome Back</h3>
                     <p>Sign in to access your Vantage account.</p>
-                    <div class="auth-error-banner" id="signin-error-banner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        <span id="signin-error-text">Something went wrong.</span>
-                    </div>
                     <form id="signin-form">
                         <div class="form-group">
                             <label for="signin-email">Email Address</label>
@@ -184,7 +610,7 @@
                             <input type="password" id="signin-password" name="password" placeholder="••••••••" required>
                         </div>
                         <button type="submit" class="cta-glow-btn signup-submit-btn">
-                            <span class="btn-label">Sign In</span>
+                            <span>Sign In</span>
                             <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </form>
@@ -208,7 +634,7 @@
                         <span>Learn More</span>
                     </a>
                 </div>
-                <form class="tracking-widget" id="hero-tracking-form">
+                <form class="tracking-widget" onsubmit="alert('Tracking ID verified: ' + document.getElementById('tracking-input').value); return false;">
                     <input type="text" id="tracking-input" placeholder="Enter routing or tracking reference" aria-label="Tracking number input">
                     <button type="submit" class="cta-glow-btn"><span>Track Asset</span></button>
                 </form>
@@ -275,51 +701,27 @@
                 <div class="network-grid">
                     <div class="route-map-panel">
                         <svg class="route-map" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Flowing Interconnected Routes Matrix -->
-                            <line x1="90" y1="140" x2="80" y2="250" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="90" y1="140" x2="330" y2="90" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="80" y1="250" x2="230" y2="280" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="230" y1="280" x2="420" y2="320" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="420" y1="320" x2="440" y2="370" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="440" y1="370" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="330" y1="90" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="230" y1="280" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
-                            <line x1="420" y1="320" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="150" y1="120" x2="330" y2="90" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
+                            <line x1="330" y1="90" x2="480" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
+                            <line x1="150" y1="120" x2="230" y2="260" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
+                            <line x1="230" y1="260" x2="420" y2="300" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
+                            <line x1="330" y1="90" x2="230" y2="260" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
+                            <line x1="420" y1="300" x2="480" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
 
-                            <!-- Seattle Node (Blue Pulse) -->
-                            <circle cx="90" cy="140" class="pulse-ring pulse-blue"></circle>
-                            <circle cx="90" cy="140" fill="#3B82F6" r="5"></circle>
-                            <text x="90" y="125" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Seattle</text>
+                            <circle cx="150" cy="120" r="6" fill="#3B82F6"></circle>
+                            <text x="150" y="100" fill="#727C89" font-size="12" text-anchor="middle">Seattle</text>
 
-                            <!-- California Hub (Purple Pulse) -->
-                            <circle cx="80" cy="250" class="pulse-ring pulse-purple"></circle>
-                            <circle cx="80" cy="250" fill="#A855F7" r="5"></circle>
-                            <text x="80" y="235" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">California</text>
+                            <circle cx="330" cy="90" r="6" fill="#3B82F6"></circle>
+                            <text x="330" y="70" fill="#727C89" font-size="12" text-anchor="middle">Toronto</text>
 
-                            <!-- Toronto Node (Green Pulse) -->
-                            <circle cx="330" cy="90" class="pulse-ring pulse-green"></circle>
-                            <circle cx="330" cy="90" fill="#10B981" r="5"></circle>
-                            <text x="330" y="75" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Toronto</text>
+                            <circle cx="480" cy="180" r="8" fill="#FFFFFF"></circle>
+                            <text x="480" y="155" fill="#FFFFFF" font-weight="bold" font-size="13" text-anchor="middle">HQ // NY</text>
 
-                            <!-- Dallas Node (Blue Pulse) -->
-                            <circle cx="230" cy="280" class="pulse-ring pulse-blue"></circle>
-                            <circle cx="230" cy="280" fill="#3B82F6" r="5"></circle>
-                            <text x="230" y="298" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Dallas</text>
+                            <circle cx="230" cy="260" r="6" fill="#3B82F6"></circle>
+                            <text x="230" y="285" fill="#727C89" font-size="12" text-anchor="middle">Dallas</text>
 
-                            <!-- Atlanta Node (Purple Pulse) -->
-                            <circle cx="420" cy="320" class="pulse-ring pulse-purple"></circle>
-                            <circle cx="420" cy="320" fill="#A855F7" r="5"></circle>
-                            <text x="420" y="338" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Atlanta</text>
-
-                            <!-- Florida Hub (Green Pulse) -->
-                            <circle cx="440" cy="370" class="pulse-ring pulse-green"></circle>
-                            <circle cx="440" cy="370" fill="#10B981" r="5"></circle>
-                            <text x="440" y="388" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Florida</text>
-
-                            <!-- HQ // NY Global Node (White Core Glow) -->
-                            <circle cx="490" cy="180" class="pulse-ring pulse-blue" style="animation-duration: 2.2s;"></circle>
-                            <circle cx="490" cy="180" fill="#FFFFFF" r="8"></circle>
-                            <text x="490" y="158" fill="#FFFFFF" font-weight="bold" font-family="Montserrat" font-size="12" text-anchor="middle">HQ // NY</text>
+                            <circle cx="420" cy="300" r="6" fill="#3B82F6"></circle>
+                            <text x="420" y="325" fill="#727C89" font-size="12" text-anchor="middle">Atlanta</text>
                         </svg>
                     </div>
                     <div class="network-text">
@@ -388,6 +790,7 @@
             </div>
         </section>
 
+        <!-- MASTER DESIGN SYSTEM BASELINE (UNTOUCHED STYLING) -->
         <section id="quote" class="final-cta-section fade-in">
             <div class="cta-glow-line cta-glow-line-1"></div>
             <div class="cta-glow-line cta-glow-line-2"></div>
@@ -399,7 +802,7 @@
                 </div>
                 <h2>Ready to Optimize Your <span class="cta-accent">Logistics?</span></h2>
                 <p>Get a personalized quote and discover how Vantage can transform your supply chain for unmatched efficiency and reliability.</p>
-                <div class="final-cta-features">                
+                <div class="final-cta-features">
                     <div class="feature-pill">
                         <span class="feature-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="15" height="12"></rect><path d="M16 10h4l3 3v5h-7z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
@@ -471,16 +874,6 @@
     </footer>
 
     <script>
-        const SUPABASE_URL = 'https://fpilrrwtuihebjgbozjf.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwaWxycnd0dWloZWJqZ2JvempmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTg4NDMsImV4cCI6MjA5ODM5NDg0M30.8UBAaymDxbDUG-oBEulO8-LoM7vP9SRgDyRj99_X3gk';
-
-        let supabaseClient = null;
-        try {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } catch (err) {
-            console.error('Failed to initialize Supabase client:', err);
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.getElementById('header');
             const signupOverlay = document.getElementById('signup-modal-overlay');
@@ -488,19 +881,10 @@
             const signupBody = document.getElementById('signup-modal-body');
             const modalTabs = document.getElementById('modal-tabs');
             const modalTabIndicator = document.getElementById('modal-tab-indicator');
-            
-            const cinematicMenu = document.getElementById('cinematic-menu');
-            const menuOpenBtn = document.getElementById('menu-open-btn');
-            const menuCloseBtn = document.getElementById('menu-close-btn');
 
             const initialModalHTML = signupBody.innerHTML;
 
-            // REPAIRED DYNAMIC SELF-HEALING TAB WORKFLOW
             const setActiveTab = (tabName) => {
-                // If a leftover confirmation screen is present, immediately repair the panel DOM
-                if (!signupBody.querySelector('.modal-panel')) {
-                    signupBody.innerHTML = initialModalHTML;
-                }
                 signupBody.querySelectorAll('.modal-panel').forEach(panel => {
                     panel.classList.toggle('is-active', panel.dataset.panel === tabName);
                 });
@@ -513,9 +897,6 @@
             };
 
             const openSignupModal = (tabName) => {
-                if (!signupBody.querySelector('.modal-panel')) {
-                    signupBody.innerHTML = initialModalHTML;
-                }
                 signupOverlay.classList.add('is-open');
                 document.body.style.overflow = 'hidden';
                 setActiveTab(tabName || 'signup');
@@ -526,49 +907,11 @@
                 document.body.style.overflow = '';
             };
 
-            // SYSTEM LIFECYCLE FORWARD-BACK HISTORY CACHE CLEANER
-            window.addEventListener('pageshow', (event) => {
-                if (signupOverlay && signupBody) {
-                    signupOverlay.classList.remove('is-open');
-                    document.body.style.overflow = '';
-                    signupBody.innerHTML = initialModalHTML;
-                    setActiveTab('signin');
-                }
-            });
-
-            menuOpenBtn.addEventListener('click', () => {
-                cinematicMenu.classList.add('is-open');
-                document.body.style.overflow = 'hidden';
-            });
-
-            const cinematicMenuClose = () => {
-                cinematicMenu.classList.remove('is-open');
-                document.body.style.overflow = '';
-            };
-
-            menuCloseBtn.addEventListener('click', cinematicMenuClose);
-
             document.addEventListener('click', (e) => {
                 const trigger = e.target.closest('.modal-trigger');
                 if (trigger) {
                     e.preventDefault();
-                    cinematicMenuClose();
                     openSignupModal(trigger.getAttribute('data-target-tab'));
-                    return;
-                }
-
-                const redirectLink = e.target.closest('.close-redirect-link');
-                if (redirectLink) {
-                    e.preventDefault();
-                    cinematicMenuClose();
-                    const targetId = redirectLink.getAttribute('data-anchor').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement) {
-                        setTimeout(() => {
-                            const offsetPosition = targetElement.getBoundingClientRect().top + window.scrollY - header.offsetHeight;
-                            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                        }, 400);
-                    }
                 }
             });
 
@@ -589,118 +932,23 @@
                 }
             });
 
-            const friendlyAuthError = (err) => {
-                const msg = (err && err.message) ? err.message : 'Something went wrong. Please verify credentials.';
-                const lower = msg.toLowerCase();
-                if (lower.includes('invalid login credentials')) return 'Incorrect email or password.';
-                if (lower.includes('email already registered')) return 'An account with this email already exists.';
-                return msg;
-            };
+            signupBody.addEventListener('submit', (e) => {
+                const targetForm = e.target.closest('form');
+                if (!targetForm) return;
+                e.preventDefault();
+                
+                signupBody.innerHTML = `
+                    <div class="signup-success">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        <h3>Identity Verified</h3>
+                        <p>Our routing desks have received your packet entry securely.</p>
+                    </div>
+                `;
+            });
 
-            const setButtonLoading = (form, isLoading, text) => {
-                const btn = form.querySelector('button[type="submit"]');
-                const label = btn.querySelector('.btn-label') || btn.querySelector('span');
-                if (isLoading) {
-                    btn.dataset.prevText = label.textContent;
-                    label.textContent = text;
-                    btn.disabled = true;
-                } else {
-                    btn.disabled = false;
-                    if (btn.dataset.prevText) label.textContent = btn.dataset.prevText;
-                }
-            };
-
-            const showErrorBanner = (bannerId, textId, msg) => {
-                const banner = document.getElementById(bannerId);
-                const text = document.getElementById(textId);
-                text.textContent = msg;
-                banner.classList.add('is-visible');
-            };
-
-            const hideErrorBanner = (bannerId) => {
-                const banner = document.getElementById(bannerId);
-                if (banner) banner.classList.remove('is-visible');
-            };
-
-            document.addEventListener('submit', async (e) => {
-                if (e.target.id === 'signup-form') {
-                    e.preventDefault();
-                    const form = e.target;
-                    hideErrorBanner('signup-error-banner');
-
-                    const email = document.getElementById('signup-email').value.trim();
-                    const firstName = document.getElementById('signup-first-name').value.trim();
-                    const lastName = document.getElementById('signup-last-name').value.trim();
-                    const contact = document.getElementById('signup-contact').value.trim();
-                    const password = document.getElementById('signup-password').value;
-
-                    setButtonLoading(form, true, 'Configuring Keypairs...');
-                    
-                    try {
-                        const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-                            email,
-                            password,
-                            options: { data: { first_name: firstName, last_name: lastName, phone: contact } }
-                        });
-
-                        if (authError) {
-                            showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(authError));
-                            setButtonLoading(form, false);
-                            return;
-                        }
-
-                        const banner = document.getElementById('signup-error-banner');
-                        banner.style.background = 'rgba(52, 211, 153, 0.1)';
-                        banner.style.borderColor = 'rgba(52, 211, 153, 0.4)';
-                        document.getElementById('signup-error-text').style.color = '#34D399';
-                        showErrorBanner('signup-error-banner', 'signup-error-text', 'Registration Confirmed! Shifting to credentials handshake authorization...');
-
-                        setTimeout(() => {
-                            form.reset();
-                            banner.removeAttribute('style');
-                            banner.classList.remove('is-visible');
-                            setButtonLoading(form, false);
-                            setActiveTab('signin');
-                        }, 1600);
-
-                    } catch (err) {
-                        showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(err));
-                        setButtonLoading(form, false);
-                    }
-                }
-
-                if (e.target.id === 'signin-form') {
-                    e.preventDefault();
-                    const form = e.target;
-                    hideErrorBanner('signin-error-banner');
-
-                    const email = document.getElementById('signin-email').value.trim();
-                    const password = document.getElementById('signin-password').value;
-
-                    setButtonLoading(form, true, 'Authorizing Handshake...');
-
-                    try {
-                        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-                        if (error) {
-                            showErrorBanner('signin-error-banner', 'signin-error-text', friendlyAuthError(error));
-                            setButtonLoading(form, false);
-                            return;
-                        }
-
-                        signupBody.innerHTML = `
-                            <div class="signup-success">
-                                <svg viewBox="0 0 24 24" stroke="#3B82F6" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                                <h3>Handshake Confirmed</h3>
-                                <p>Transferring session to control center nodes...</p>
-                            </div>`;
-                        
-                        setTimeout(() => { window.location.href = './dashboard.html'; }, 1200);
-
-                    } catch (err) {
-                        showErrorBanner('signin-error-banner', 'signin-error-text', friendlyAuthError(err));
-                        setButtonLoading(form, false);
-                    }
+            signupOverlay.addEventListener('transitionend', (e) => {
+                if (e.target === signupOverlay && !signupOverlay.classList.contains('is-open')) {
+                    signupBody.innerHTML = initialModalHTML;
                 }
             });
 
@@ -708,6 +956,7 @@
                 header.classList.toggle('scrolled', window.scrollY > 50);
             });
 
+            // Intersection Motion Engine
             const sections = document.querySelectorAll('section');
             const sectionObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
