@@ -42,6 +42,7 @@
         }
 
         a { text-decoration: none; color: inherit; }
+        button { font-family: inherit; }
 
         h1, h2, h3, h4 {
             font-family: var(--font-family-primary);
@@ -77,18 +78,86 @@
         }
         .logo { font-size: 1.375rem; font-weight: 700; letter-spacing: 0.04em; }
         .logo span { color: var(--color-accent-blue); }
-        .header-right { display: flex; align-items: center; gap: 1.5rem; }
-        .header-greeting { font-size: 0.9rem; color: var(--color-secondary-text); }
-        .header-greeting strong { color: var(--color-primary-text); }
-        .signout-btn {
-            font-family: var(--font-family-primary); font-weight: 600; font-size: 0.8rem;
-            letter-spacing: 0.04em; text-transform: uppercase;
-            padding: 0.65rem 1.25rem; border-radius: 999px;
-            border: 1px solid var(--color-borders); background: rgba(255,255,255,0.03);
-            color: var(--color-secondary-text); cursor: pointer;
-            transition: border-color 0.25s ease, color 0.25s ease;
+
+        .account-trigger {
+            display: flex; align-items: center; gap: 0.75rem;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--color-borders);
+            border-radius: 999px; padding: 0.4rem 1rem 0.4rem 0.4rem;
+            cursor: pointer; transition: border-color 0.25s ease, background 0.25s ease;
         }
-        .signout-btn:hover { border-color: rgba(248, 113, 113, 0.4); color: var(--color-error); }
+        .account-trigger:hover { border-color: rgba(59,130,246,0.35); background: rgba(255,255,255,0.05); }
+        .account-trigger-avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(59,130,246,0.4), rgba(59,130,246,0.1));
+            border: 1px solid rgba(59,130,246,0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-family-primary); font-weight: 700; font-size: 0.78rem;
+            flex-shrink: 0;
+        }
+        .account-trigger-text { display: flex; flex-direction: column; text-align: left; }
+        .account-trigger-greeting { font-size: 0.85rem; font-weight: 600; line-height: 1.2; }
+        .account-trigger-sub { font-size: 0.72rem; color: var(--color-muted-text); }
+        .account-trigger svg { width: 14px; height: 14px; stroke: var(--color-muted-text); margin-left: 0.15rem; }
+
+        /* --- Account drawer --- */
+        .drawer-overlay {
+            position: fixed; inset: 0; background: rgba(2,3,5,0.6);
+            backdrop-filter: blur(4px); z-index: 900;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .drawer-overlay.is-open { opacity: 1; visibility: visible; }
+
+        .account-drawer {
+            position: fixed; top: 0; right: 0; height: 100vh; width: 320px; max-width: 88vw;
+            background: #0B0E14; border-left: 1px solid var(--color-borders);
+            z-index: 950; display: flex; flex-direction: column;
+            transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.25,1,0.5,1);
+            box-shadow: -20px 0 60px rgba(0,0,0,0.5);
+        }
+        .account-drawer.is-open { transform: translateX(0); }
+
+        .drawer-top { padding: 1.5rem 1.25rem 0.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .drawer-brand { font-family: var(--font-family-primary); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; }
+        .drawer-brand span { color: var(--color-accent-blue); }
+        .drawer-close {
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-borders);
+            background: rgba(255,255,255,0.03); color: var(--color-secondary-text);
+            font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .drawer-close:hover { color: var(--color-primary-text); border-color: rgba(255,255,255,0.2); }
+
+        .drawer-section { padding: 0.75rem 0.9rem; }
+        .drawer-divider { height: 1px; background: var(--color-borders); margin: 0.4rem 1.25rem; }
+
+        .drawer-link {
+            display: flex; align-items: center; gap: 0.85rem; width: 100%;
+            padding: 0.8rem 0.85rem; border-radius: 12px; border: none; background: none;
+            color: var(--color-secondary-text); font-size: 0.92rem; font-weight: 500;
+            cursor: pointer; text-align: left; transition: background 0.2s ease, color 0.2s ease;
+        }
+        .drawer-link:hover { background: rgba(255,255,255,0.04); color: var(--color-primary-text); }
+        .drawer-link svg { width: 18px; height: 18px; stroke: currentColor; flex-shrink: 0; }
+        .drawer-link.accent { color: var(--color-accent-blue); }
+        .drawer-link.danger { color: var(--color-error); }
+        .drawer-link.danger:hover { background: rgba(248,113,113,0.08); }
+
+        .drawer-spacer { flex: 1; }
+
+        .drawer-identity {
+            display: flex; align-items: center; gap: 0.85rem;
+            padding: 1rem 1.25rem; border-top: 1px solid var(--color-borders);
+            background: rgba(255,255,255,0.02);
+        }
+        .drawer-identity-avatar {
+            width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(59,130,246,0.4), rgba(59,130,246,0.1));
+            border: 1px solid rgba(59,130,246,0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-family-primary); font-weight: 700; font-size: 0.85rem;
+        }
+        .drawer-identity-text { overflow: hidden; }
+        .drawer-identity-name { font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .drawer-identity-email { font-size: 0.76rem; color: var(--color-muted-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* --- Layout --- */
         .dashboard-main { max-width: 1160px; margin: 0 auto; padding: 2.75rem 2rem 5rem; }
@@ -101,7 +170,7 @@
             padding: 0.4rem 0.85rem; border-radius: 999px;
         }
 
-        .grid-layout { display: grid; grid-template-columns: 1fr 1.6fr; gap: 1.5rem; align-items: start; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 1.7fr; gap: 1.5rem; align-items: start; }
 
         .panel {
             background: var(--color-panel-background);
@@ -142,33 +211,58 @@
         }
 
         /* --- Shipments --- */
-        .shipment-list { display: flex; flex-direction: column; gap: 0.9rem; }
+        .shipment-list { display: flex; flex-direction: column; gap: 1.1rem; }
         .shipment-card {
-            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
             background: rgba(255,255,255,0.02); border: 1px solid var(--color-borders);
-            border-radius: 14px; padding: 1.1rem 1.25rem;
+            border-radius: 16px; padding: 1.25rem 1.35rem 1.5rem;
             transition: border-color 0.25s ease, transform 0.25s ease;
         }
         .shipment-card:hover { border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
+
+        .shipment-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; }
         .shipment-main { display: flex; flex-direction: column; gap: 0.25rem; }
         .shipment-ref { font-family: var(--font-family-primary); font-weight: 700; font-size: 0.95rem; }
         .shipment-route { font-size: 0.8rem; color: var(--color-muted-text); }
         .shipment-eta { font-size: 0.78rem; color: var(--color-secondary-text); text-align: right; }
         .shipment-eta strong { display: block; color: var(--color-primary-text); font-size: 0.85rem; }
 
-        .status-pill {
-            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
-            padding: 0.3rem 0.75rem; border-radius: 999px; white-space: nowrap;
+        /* UPS-style horizontal progress tracker */
+        .tracker { display: flex; align-items: flex-start; }
+        .tracker-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+        .tracker-node {
+            width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--color-borders); background: var(--color-elevated-surface);
+            color: var(--color-muted-text); z-index: 2;
         }
-        .status-transit { color: var(--color-accent-blue); background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); }
-        .status-delivered { color: var(--color-success); background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); }
-        .status-pending { color: var(--color-warning); background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); }
+        .tracker-node svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 3; }
+        .tracker-line {
+            position: absolute; top: 13px; left: -50%; width: 100%; height: 2px;
+            background: var(--color-borders); z-index: 1;
+        }
+        .tracker-step:first-child .tracker-line { display: none; }
+
+        .tracker-step.is-done .tracker-node { background: var(--color-accent-blue); border-color: var(--color-accent-blue); color: #fff; }
+        .tracker-step.is-done .tracker-line { background: var(--color-accent-blue); }
+        .tracker-step.is-current .tracker-node {
+            background: rgba(59,130,246,0.15); border-color: var(--color-accent-blue); color: var(--color-accent-blue);
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+        }
+        .tracker-step.is-current .tracker-node::after {
+            content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent-blue);
+        }
+        .tracker-label {
+            margin-top: 0.55rem; font-size: 0.68rem; text-align: center; color: var(--color-muted-text);
+            line-height: 1.25; max-width: 72px;
+        }
+        .tracker-step.is-done .tracker-label, .tracker-step.is-current .tracker-label { color: var(--color-primary-text); font-weight: 600; }
 
         @media (max-width: 860px) {
             .grid-layout { grid-template-columns: 1fr; }
             .dashboard-main { padding: 2rem 1.25rem 4rem; }
             .header { padding: 0 1.25rem; }
-            .header-greeting { display: none; }
+            .account-trigger-text { display: none; }
+            .tracker-label { font-size: 0.6rem; max-width: 56px; }
         }
     </style>
 </head>
@@ -182,15 +276,74 @@
     <div id="app">
         <header class="header">
             <a href="index.html" class="logo">VANTAGE<span>.</span></a>
-            <div class="header-right">
-                <span class="header-greeting">Signed in as <strong id="greeting-email">—</strong></span>
-                <button class="signout-btn" id="signout-btn">Sign Out</button>
-            </div>
+            <button class="account-trigger" id="account-trigger">
+                <span class="account-trigger-avatar" id="trigger-initials">--</span>
+                <span class="account-trigger-text">
+                    <span class="account-trigger-greeting" id="trigger-greeting">Welcome back</span>
+                    <span class="account-trigger-sub">Manage account</span>
+                </span>
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
         </header>
+
+        <div class="drawer-overlay" id="drawer-overlay"></div>
+        <aside class="account-drawer" id="account-drawer">
+            <div class="drawer-top">
+                <span class="drawer-brand">VANTAGE<span>.</span></span>
+                <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+            </div>
+
+            <div class="drawer-section">
+                <button class="drawer-link" data-anchor="#shipments-panel">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="1" y="6" width="15" height="12"></rect><path d="M16 10h4l3 3v5h-7z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    Track a Shipment
+                </button>
+                <button class="drawer-link" data-anchor="#shipments-panel">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 3v18h18"></path><path d="M7 15l4-4 3 3 5-6"></path></svg>
+                    All Shipments
+                </button>
+            </div>
+
+            <div class="drawer-divider"></div>
+
+            <div class="drawer-section">
+                <button class="drawer-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Account Settings
+                </button>
+                <button class="drawer-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    Help Center
+                </button>
+                <button class="drawer-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 4h16v16H4z"></path><path d="M22 6l-10 7L2 6"></path></svg>
+                    Contact Us
+                </button>
+            </div>
+
+            <div class="drawer-divider"></div>
+
+            <div class="drawer-section">
+                <button class="drawer-link danger" id="drawer-signout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
+                    Sign Out
+                </button>
+            </div>
+
+            <div class="drawer-spacer"></div>
+
+            <div class="drawer-identity">
+                <span class="drawer-identity-avatar" id="drawer-initials">--</span>
+                <div class="drawer-identity-text">
+                    <div class="drawer-identity-name" id="drawer-name">—</div>
+                    <div class="drawer-identity-email" id="drawer-email">—</div>
+                </div>
+            </div>
+        </aside>
 
         <main class="dashboard-main">
             <div class="page-heading">
-                <h1>Your Dashboard</h1>
+                <h1 id="page-welcome">Welcome back</h1>
                 <p>Track active shipments and manage your account details.</p>
                 <div class="placeholder-note">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -223,7 +376,7 @@
                     </div>
                 </section>
 
-                <section class="panel">
+                <section class="panel" id="shipments-panel">
                     <h3>Shipment Tracking</h3>
                     <div class="shipment-list" id="shipment-list">
                         <!-- populated by JS with placeholder data -->
@@ -240,25 +393,47 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // ---- Placeholder shipment data (swap for a real Supabase query later) ----
+        // step: index into TRACKER_STEPS below representing current progress
+        const TRACKER_STEPS = ['Order\nConfirmed', 'Picked\nUp', 'In\nTransit', 'Out for\nDelivery', 'Delivered'];
         const PLACEHOLDER_SHIPMENTS = [
-            { ref: 'VG-48210-NY', route: 'Toronto → New York HQ', eta: 'Jul 12', status: 'transit', label: 'In Transit' },
-            { ref: 'VG-48198-CA', route: 'Seattle → California', eta: 'Jul 10', status: 'delivered', label: 'Delivered' },
-            { ref: 'VG-48233-FL', route: 'Atlanta → Florida', eta: 'Jul 15', status: 'pending', label: 'Pending Pickup' },
+            { ref: 'VG-48210-NY', route: 'Toronto → New York HQ', eta: 'Jul 12', step: 2 },
+            { ref: 'VG-48198-CA', route: 'Seattle → California', eta: 'Jul 10', step: 4 },
+            { ref: 'VG-48233-FL', route: 'Atlanta → Florida', eta: 'Jul 15', step: 0 },
         ];
+
+        function renderTracker(currentStep) {
+            return TRACKER_STEPS.map((label, i) => {
+                const state = i < currentStep ? 'is-done' : i === currentStep ? 'is-current' : '';
+                const icon = i < currentStep
+                    ? '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>'
+                    : '';
+                return `
+                    <div class="tracker-step ${state}">
+                        <div class="tracker-node">
+                            <div class="tracker-line"></div>
+                            ${icon}
+                        </div>
+                        <div class="tracker-label">${label.replace('\n', '<br>')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function renderShipments() {
             const list = document.getElementById('shipment-list');
             list.innerHTML = PLACEHOLDER_SHIPMENTS.map(s => `
                 <div class="shipment-card">
-                    <div class="shipment-main">
-                        <span class="shipment-ref">${s.ref}</span>
-                        <span class="shipment-route">${s.route}</span>
+                    <div class="shipment-head">
+                        <div class="shipment-main">
+                            <span class="shipment-ref">${s.ref}</span>
+                            <span class="shipment-route">${s.route}</span>
+                        </div>
+                        <div class="shipment-eta">
+                            ETA
+                            <strong>${s.eta}</strong>
+                        </div>
                     </div>
-                    <div class="shipment-eta">
-                        ETA
-                        <strong>${s.eta}</strong>
-                    </div>
-                    <span class="status-pill status-${s.status}">${s.label}</span>
+                    <div class="tracker">${renderTracker(s.step)}</div>
                 </div>
             `).join('');
         }
@@ -275,14 +450,25 @@
 
         function renderAccount(user) {
             const meta = user.user_metadata || {};
-            const fullName = [meta.first_name, meta.last_name].filter(Boolean).join(' ') || 'Vantage Customer';
+            const firstName = meta.first_name || '';
+            const lastName = meta.last_name || '';
+            const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Vantage Customer';
+            const initialsText = initials(fullName);
 
-            document.getElementById('account-initials').textContent = initials(fullName);
+            document.getElementById('account-initials').textContent = initialsText;
             document.getElementById('account-name').textContent = fullName;
             document.getElementById('account-email').textContent = user.email || '—';
             document.getElementById('account-created').textContent = formatDate(user.created_at);
             document.getElementById('account-phone').textContent = meta.phone || 'Not provided';
-            document.getElementById('greeting-email').textContent = user.email || '—';
+
+            // Header trigger + drawer identity: name only, no email up top
+            document.getElementById('trigger-initials').textContent = initialsText;
+            document.getElementById('trigger-greeting').textContent = firstName ? `Hi, ${firstName}` : 'Welcome back';
+            document.getElementById('page-welcome').textContent = firstName ? `Welcome back, ${fullName}` : 'Welcome back';
+
+            document.getElementById('drawer-initials').textContent = initialsText;
+            document.getElementById('drawer-name').textContent = fullName;
+            document.getElementById('drawer-email').textContent = user.email || '—';
         }
 
         async function checkSessionAndInit() {
@@ -310,10 +496,38 @@
             }
         });
 
-        document.getElementById('signout-btn').addEventListener('click', async () => {
-            const btn = document.getElementById('signout-btn');
+        // ---- Account drawer open/close ----
+        const drawer = document.getElementById('account-drawer');
+        const drawerOverlay = document.getElementById('drawer-overlay');
+        const accountTrigger = document.getElementById('account-trigger');
+        const drawerClose = document.getElementById('drawer-close');
+
+        function openDrawer() {
+            drawer.classList.add('is-open');
+            drawerOverlay.classList.add('is-open');
+        }
+        function closeDrawer() {
+            drawer.classList.remove('is-open');
+            drawerOverlay.classList.remove('is-open');
+        }
+
+        accountTrigger.addEventListener('click', openDrawer);
+        drawerClose.addEventListener('click', closeDrawer);
+        drawerOverlay.addEventListener('click', closeDrawer);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
+        drawer.querySelectorAll('.drawer-link[data-anchor]').forEach(link => {
+            link.addEventListener('click', () => {
+                closeDrawer();
+                const target = document.querySelector(link.getAttribute('data-anchor'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        document.getElementById('drawer-signout').addEventListener('click', async (e) => {
+            const btn = e.currentTarget;
             btn.disabled = true;
-            btn.textContent = 'Signing out…';
+            btn.style.opacity = '0.6';
             await supabaseClient.auth.signOut();
             window.location.href = 'index.html';
         });
@@ -322,3 +536,6 @@
     </script>
 </body>
 </html>
+HTMLEOF
+cp /home/claude/dashboard.html /mnt/user-data/outputs/dashboard.html
+echo "done"
