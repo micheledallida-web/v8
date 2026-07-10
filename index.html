@@ -482,6 +482,7 @@
         .signup-modal {
             background-color: var(--color-panel-background); border: 1px solid var(--color-borders);
             border-radius: var(--card-radius); padding: var(--spacing-lg); max-width: 460px; width: 100%;
+            max-height: 88vh; display: flex; flex-direction: column;
             position: relative; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
             transform: translateY(15px); transition: transform 0.3s ease;
         }
@@ -491,6 +492,7 @@
         .signup-modal-close {
             position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none;
             color: var(--color-muted-text); font-size: 1.75rem; cursor: pointer; transition: color 0.3s ease;
+            z-index: 3;
         }
         .signup-modal-close:hover { color: var(--color-primary-text); }
 
@@ -498,6 +500,15 @@
             position: relative; display: flex; background: rgba(0,0,0,0.2);
             border: 1px solid var(--color-borders); border-radius: 999px; padding: 4px;
             margin-bottom: var(--spacing-md);
+            flex-shrink: 0;
+        }
+        #signup-modal-body {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1 1 auto;
+            min-height: 0;
+            padding-right: 4px;
+            margin-right: -4px;
         }
         .modal-tab {
             flex: 1; position: relative; z-index: 2; background: none; border: none; cursor: pointer;
@@ -528,6 +539,9 @@
         .form-group input:focus { outline: none; border-color: var(--color-accent-blue); }
         .signup-submit-btn { width: 100%; margin-top: var(--spacing-xs); justify-content: center; }
         .modal-switch-line { margin: var(--spacing-md) 0 0; text-align: center; font-size: 0.9rem; color: var(--color-muted-text); }
+        .modal-switch-line-top {
+            margin: 0 0 var(--spacing-xs);
+        }
         .modal-switch-link { color: var(--color-accent-blue); font-weight: 600; }
         
         .signup-success { text-align: center; padding: var(--spacing-md) 0; }
@@ -579,6 +593,13 @@
             .hero-ctas .cta-glow-btn { width: 100%; max-width: 320px; justify-content: center; }
             .tracking-widget { flex-direction: column; background: var(--color-panel-background); }
             .tech-grid, .value-prop-grid, .career-grid { grid-template-columns: 1fr; }
+            .signup-modal { max-height: 92vh; padding: var(--spacing-md); }
+            .signup-modal h3 { font-size: 1.2rem; }
+            .signup-modal p { font-size: 0.88rem; margin-bottom: var(--spacing-sm); }
+            .form-group { margin-bottom: 1rem; }
+            .form-group label { margin-bottom: 0.35rem; font-size: 0.8rem; }
+            .form-group input { padding: 0.7rem 0.9rem; }
+            .signup-submit-btn { height: 52px; }
         }
     </style>
 </head>
@@ -665,12 +686,12 @@
                             <label for="signup-password">Password</label>
                             <input type="password" id="signup-password" name="password" placeholder="At least 8 characters" minlength="8" required>
                         </div>
+                        <p class="modal-switch-line modal-switch-line-top">Already have an account? <a href="#" class="modal-switch-link" data-goto="signin">Sign in</a></p>
                         <button type="submit" class="cta-glow-btn signup-submit-btn">
                             <span class="btn-label">Create Account</span>
                             <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </form>
-                    <p class="modal-switch-line">Already have an account? <a href="#" class="modal-switch-link" data-goto="signin">Sign in</a></p>
                 </div>
 
                 <div class="modal-panel" data-panel="signin">
