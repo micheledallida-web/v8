@@ -76,8 +76,15 @@
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--color-borders);
         }
-        .logo { font-size: 1.375rem; font-weight: 700; letter-spacing: 0.04em; }
-        .logo span { color: var(--color-accent-blue); }
+        
+        /* New Logo Styles */
+        .logo { display: flex; align-items: center; }
+        .brand-logo {
+            height: 48px; /* Adjust height as needed to fit your header perfectly */
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
 
         .hamburger-trigger {
             display: flex; align-items: center; justify-content: center;
@@ -115,8 +122,14 @@
         .account-drawer.is-open { transform: translateX(0); }
 
         .drawer-top { padding: 1.5rem 1.25rem 0.75rem; display: flex; justify-content: space-between; align-items: center; }
-        .drawer-brand { font-family: var(--font-family-primary); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; }
-        .drawer-brand span { color: var(--color-accent-blue); }
+        
+        /* Drawer Logo Style */
+        .drawer-brand-logo {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+        }
+
         .drawer-close {
             width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-borders);
             background: rgba(255,255,255,0.03); color: var(--color-secondary-text);
@@ -324,7 +337,10 @@
 
     <div id="app">
         <header class="header">
-            <a href="index.html" class="logo">VANTAGE<span>.</span></a>
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Vantage Logistics" class="brand-logo">
+            </a>
+
             <button class="hamburger-trigger" id="account-trigger" aria-label="Open menu">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -335,257 +351,4 @@
         </header>
 
         <div class="drawer-overlay" id="drawer-overlay"></div>
-        <aside class="account-drawer" id="account-drawer">
-            <div class="drawer-top">
-                <span class="drawer-brand">VANTAGE<span>.</span></span>
-                <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
-            </div>
-            
-            <div class="drawer-contact-info">
-                <div class="drawer-contact-row">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                    <span id="drawer-email-top">—</span>
-                </div>
-                <div class="drawer-contact-row">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                    <span id="drawer-phone-top">—</span>
-                </div>
-            </div>
-
-            <div class="drawer-divider" style="margin-top: 0;"></div>
-
-            <div class="drawer-section">
-                <button class="drawer-link" data-anchor="#shipments-panel">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="1" y="6" width="15" height="12"></rect><path d="M16 10h4l3 3v5h-7z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                    Track a Shipment
-                </button>
-                <button class="drawer-link" data-anchor="#shipments-panel">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 3v18h18"></path><path d="M7 15l4-4 3 3 5-6"></path></svg>
-                    All Shipments
-                </button>
-            </div>
-
-            <div class="drawer-divider"></div>
-
-            <div class="drawer-section">
-                <button class="drawer-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    Account Settings
-                </button>
-                <button class="drawer-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    Help Center
-                </button>
-                <button class="drawer-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 4h16v16H4z"></path><path d="M22 6l-10 7L2 6"></path></svg>
-                    Contact Us
-                </button>
-            </div>
-
-            <div class="drawer-divider"></div>
-
-            <div class="drawer-section">
-                <button class="drawer-link danger" id="drawer-signout">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
-                    Sign Out
-                </button>
-            </div>
-
-            <div class="drawer-spacer"></div>
-
-            <div class="drawer-identity">
-                <span class="drawer-identity-avatar" id="drawer-initials">--</span>
-                <div class="drawer-identity-text">
-                    <div class="drawer-identity-name" id="drawer-name">—</div>
-                </div>
-            </div>
-        </aside>
-
-        <main class="dashboard-main">
-            <div class="page-heading">
-                <h1 id="page-welcome">Welcome back</h1>
-                <p>Track active shipments and manage your account details.</p>
-            </div>
-
-            <div class="grid-layout">
-                <section class="panel">
-                    <h3>Account Overview</h3>
-                    <div class="account-avatar" id="account-initials">--</div>
-                    <div class="account-name" id="account-name">—</div>
-
-                    <div class="account-row">
-                        <span>Plan</span>
-                        <span class="plan-badge">Enterprise</span>
-                    </div>
-                    <div class="account-row">
-                        <span>Member Since</span>
-                        <span id="account-created">—</span>
-                    </div>
-                    <div class="account-row">
-                        <span>Active Shipments</span>
-                        <span>1</span>
-                    </div>
-                </section>
-
-                <section class="panel" id="shipments-panel">
-                    <h3>Shipment Tracking</h3>
-                    
-                    <div class="tracking-widget">
-                        <input type="text" placeholder="Enter routing or tracking reference">
-                        <button type="button">TRACK SHIPMENT</button>
-                    </div>
-
-                    <div class="shipment-list" id="shipment-list">
-                        <!-- populated by JS with placeholder data -->
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        const SUPABASE_URL = 'https://fpilrrwtuihebjgbozjf.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwaWxycnd0dWloZWJqZ2JvempmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTg4NDMsImV4cCI6MjA5ODM5NDg0M30.8UBAaymDxbDUG-oBEulO8-LoM7vP9SRgDyRj99_X3gk';
-
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // ---- Placeholder shipment data (swap for a real Supabase query later) ----
-        // step: index into TRACKER_STEPS below representing current progress
-        const TRACKER_STEPS = ['Order\nConfirmed', 'Picked\nUp', 'In\nTransit', 'Out for\nDelivery', 'Delivered'];
-        const PLACEHOLDER_SHIPMENTS = [
-            { ref: 'VG-48210-NY', route: 'Toronto → New York HQ', eta: 'Jul 12', step: 2 }
-        ];
-
-        function renderTracker(currentStep) {
-            return TRACKER_STEPS.map((label, i) => {
-                const state = i < currentStep ? 'is-done' : i === currentStep ? 'is-current' : '';
-                const icon = i < currentStep
-                    ? '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>'
-                    : '';
-                return `
-                    <div class="tracker-step ${state}">
-                        <div class="tracker-node">
-                            <div class="tracker-line"></div>
-                            ${icon}
-                        </div>
-                        <div class="tracker-label">${label.replace('\n', '<br>')}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderShipments() {
-            const list = document.getElementById('shipment-list');
-            list.innerHTML = PLACEHOLDER_SHIPMENTS.map(s => `
-                <div class="shipment-card">
-                    <div class="shipment-head">
-                        <div class="shipment-main">
-                            <span class="shipment-ref">${s.ref}</span>
-                            <span class="shipment-route">${s.route}</span>
-                        </div>
-                        <div class="shipment-eta">
-                            ETA
-                            <strong>${s.eta}</strong>
-                        </div>
-                    </div>
-                    <div class="tracker">${renderTracker(s.step)}</div>
-                </div>
-            `).join('');
-        }
-
-        function initials(name) {
-            if (!name) return '--';
-            return name.split(' ').filter(Boolean).map(p => p[0].toUpperCase()).slice(0, 2).join('');
-        }
-
-        function formatDate(iso) {
-            if (!iso) return '—';
-            return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-        }
-
-        function renderAccount(user) {
-            const meta = user.user_metadata || {};
-            const firstName = meta.first_name || '';
-            const lastName = meta.last_name || '';
-            const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Vantage Customer';
-            const initialsText = initials(fullName);
-
-            document.getElementById('account-initials').textContent = initialsText;
-            document.getElementById('account-name').textContent = fullName;
-            document.getElementById('account-created').textContent = formatDate(user.created_at);
-
-            document.getElementById('page-welcome').textContent = firstName ? `Welcome back, ${fullName}` : 'Welcome back';
-
-            document.getElementById('drawer-initials').textContent = initialsText;
-            document.getElementById('drawer-name').textContent = fullName;
-
-            // Updated: Render email and phone numbers directly underneath the drawer logo
-            document.getElementById('drawer-email-top').textContent = user.email || '—';
-            document.getElementById('drawer-phone-top').textContent = meta.phone || 'Not provided';
-        }
-
-        async function checkSessionAndInit() {
-            try {
-                const { data, error } = await supabaseClient.auth.getSession();
-                if (error || !data.session) {
-                    window.location.href = 'index.html';
-                    return;
-                }
-                renderAccount(data.session.user);
-                renderShipments();
-
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('app').classList.add('is-ready');
-            } catch (err) {
-                console.error('Session check failed:', err);
-                window.location.href = 'index.html';
-            }
-        }
-
-        // Keep the dashboard in sync if the user signs out in another tab
-        supabaseClient.auth.onAuthStateChange((event) => {
-            if (event === 'SIGNED_OUT') {
-                window.location.href = 'index.html';
-            }
-        });
-
-        // ---- Account drawer open/close ----
-        const drawer = document.getElementById('account-drawer');
-        const drawerOverlay = document.getElementById('drawer-overlay');
-        const accountTrigger = document.getElementById('account-trigger');
-        const drawerClose = document.getElementById('drawer-close');
-
-        function openDrawer() {
-            drawer.classList.add('is-open');
-            drawerOverlay.classList.add('is-open');
-        }
-        function closeDrawer() {
-            drawer.classList.remove('is-open');
-            drawerOverlay.classList.remove('is-open');
-        }
-
-        accountTrigger.addEventListener('click', openDrawer);
-        drawerClose.addEventListener('click', closeDrawer);
-        drawerOverlay.addEventListener('click', closeDrawer);
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
-
-        drawer.querySelectorAll('.drawer-link[data-anchor]').forEach(link => {
-            link.addEventListener('click', () => {
-                closeDrawer();
-                const target = document.querySelector(link.getAttribute('data-anchor'));
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        });
-
-        document.getElementById('drawer-signout').addEventListener('click', async (e) => {
-            const btn = e.currentTarget;
-            btn.disabled = true;
-            btn.style.opacity = '0.6';
-            await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';
-        });
-
-        checkSessionAndInit();
-    </script>
-</body>
-</html>
+        <aside class="account-drawer" id
