@@ -510,6 +510,61 @@
             padding-right: 4px;
             margin-right: -4px;
         }
+
+        .modal-scroll-fade {
+            position: absolute;
+            left: var(--spacing-lg); right: var(--spacing-lg);
+            bottom: var(--spacing-lg);
+            height: 64px;
+            background: linear-gradient(to bottom, transparent, rgba(10, 13, 20, 0.92) 78%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 4;
+            border-radius: 0 0 var(--card-radius) var(--card-radius);
+        }
+        .modal-scroll-fade.is-visible { opacity: 0.9; }
+
+        .modal-scroll-btn {
+            position: absolute;
+            left: 50%;
+            bottom: calc(var(--spacing-lg) + 0.6rem);
+            transform: translateX(-50%) scale(0.85);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--color-accent-blue);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 26px rgba(59, 130, 246, 0.55);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+            z-index: 5;
+        }
+        .modal-scroll-btn.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) scale(1);
+        }
+        .modal-scroll-btn svg {
+            width: 18px; height: 18px;
+            animation: modal-scroll-chevron-bounce 1.6s ease-in-out infinite;
+        }
+        .modal-scroll-btn:hover {
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.7);
+            transform: translateX(-50%) scale(1.08);
+        }
+        .modal-scroll-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 12px 32px rgba(59, 130, 246, 0.7);
+            transform: translateX(-50%) scale(1.08);
+        }
+        @keyframes modal-scroll-chevron-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(3px); }
+        }
         .modal-tab {
             flex: 1; position: relative; z-index: 2; background: none; border: none; cursor: pointer;
             padding: 0.65rem 1rem; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem;
@@ -718,6 +773,11 @@
                     <p class="modal-switch-line">New to Vantage? <a href="#" class="modal-switch-link" data-goto="signup">Create an account</a></p>
                 </div>
             </div>
+
+            <div class="modal-scroll-fade" id="modal-scroll-fade" aria-hidden="true"></div>
+            <button type="button" class="modal-scroll-btn" id="modal-scroll-btn" aria-label="Scroll down for more">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
         </div>
     </div>
 
@@ -1008,7 +1068,37 @@
             const menuOpenBtn = document.getElementById('menu-open-btn');
             const menuCloseBtn = document.getElementById('menu-close-btn');
 
+            const scrollFade = document.getElementById('modal-scroll-fade');
+            const scrollBtn = document.getElementById('modal-scroll-btn');
+
             const initialModalHTML = signupBody.innerHTML;
+
+            // Shows a "scroll for more" affordance whenever the form content is
+            // taller than the visible modal area — useful for touch, mouse, and
+            // remote/D-pad navigation (TVs, keyboard-only) alike, since it's a
+            // real focusable <button> rather than a gesture-only hint.
+            const updateScrollIndicator = () => {
+                const hasOverflow = signupBody.scrollHeight > signupBody.clientHeight + 4;
+                const distanceFromBottom = signupBody.scrollHeight - signupBody.scrollTop - signupBody.clientHeight;
+                const isNearBottom = distanceFromBottom < 24;
+                const shouldShow = hasOverflow && !isNearBottom;
+                scrollFade.classList.toggle('is-visible', shouldShow);
+                scrollBtn.classList.toggle('is-visible', shouldShow);
+            };
+
+            signupBody.addEventListener('scroll', updateScrollIndicator);
+            window.addEventListener('resize', updateScrollIndicator);
+
+            scrollBtn.addEventListener('click', () => {
+                signupBody.scrollBy({ top: signupBody.clientHeight * 0.75, behavior: 'smooth' });
+            });
+
+            // Form content swaps (tab switch, success/failure screens, restoring
+            // the form) change signupBody's height, so recheck after any of those.
+            const scrollIndicatorObserver = new MutationObserver(() => {
+                requestAnimationFrame(updateScrollIndicator);
+            });
+            scrollIndicatorObserver.observe(signupBody, { childList: true, subtree: true });
 
             const setActiveTab = (tabName) => {
                 // If we're currently showing a success/failure screen, the tabbed
@@ -1024,14 +1114,17 @@
                     tab.classList.toggle('is-active', tab.dataset.tab === tabName);
                 });
                 modalTabIndicator.classList.toggle('is-signin', tabName === 'signin');
+                signupBody.scrollTop = 0;
                 const firstInput = signupBody.querySelector(`.modal-panel[data-panel="${tabName}"] input`);
                 if (firstInput) setTimeout(() => firstInput.focus(), 250);
+                setTimeout(updateScrollIndicator, 260);
             };
 
             const openSignupModal = (tabName) => {
                 signupOverlay.classList.add('is-open');
                 document.body.style.overflow = 'hidden';
                 setActiveTab(tabName || 'signup');
+                setTimeout(updateScrollIndicator, 300);
             };
 
             const closeSignupModal = () => {
