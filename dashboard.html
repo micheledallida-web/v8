@@ -79,25 +79,23 @@
         .logo { font-size: 1.375rem; font-weight: 700; letter-spacing: 0.04em; }
         .logo span { color: var(--color-accent-blue); }
 
-        .account-trigger {
-            display: flex; align-items: center; gap: 0.75rem;
-            background: rgba(255,255,255,0.03); border: 1px solid var(--color-borders);
-            border-radius: 999px; padding: 0.4rem 1rem 0.4rem 0.4rem;
-            cursor: pointer; transition: border-color 0.25s ease, background 0.25s ease;
-        }
-        .account-trigger:hover { border-color: rgba(59,130,246,0.35); background: rgba(255,255,255,0.05); }
-        .account-trigger-avatar {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: linear-gradient(135deg, rgba(59,130,246,0.4), rgba(59,130,246,0.1));
-            border: 1px solid rgba(59,130,246,0.4);
+        .hamburger-trigger {
             display: flex; align-items: center; justify-content: center;
-            font-family: var(--font-family-primary); font-weight: 700; font-size: 0.78rem;
-            flex-shrink: 0;
+            width: 44px; height: 44px;
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid var(--color-borders);
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: border-color 0.25s ease, background 0.25s ease;
+            color: var(--color-primary-text);
         }
-        .account-trigger-text { display: flex; flex-direction: column; text-align: left; }
-        .account-trigger-greeting { font-size: 0.85rem; font-weight: 600; line-height: 1.2; }
-        .account-trigger-sub { font-size: 0.72rem; color: var(--color-muted-text); }
-        .account-trigger svg { width: 14px; height: 14px; stroke: var(--color-muted-text); margin-left: 0.15rem; }
+        .hamburger-trigger:hover {
+            border-color: rgba(59,130,246,0.35); 
+            background: rgba(255,255,255,0.05);
+        }
+        .hamburger-trigger svg {
+            width: 20px; height: 20px;
+        }
 
         /* --- Account drawer --- */
         .drawer-overlay {
@@ -116,7 +114,7 @@
         }
         .account-drawer.is-open { transform: translateX(0); }
 
-        .drawer-top { padding: 1.5rem 1.25rem 0.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .drawer-top { padding: 1.5rem 1.25rem 0.75rem; display: flex; justify-content: space-between; align-items: center; }
         .drawer-brand { font-family: var(--font-family-primary); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; }
         .drawer-brand span { color: var(--color-accent-blue); }
         .drawer-close {
@@ -125,6 +123,19 @@
             font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
         .drawer-close:hover { color: var(--color-primary-text); border-color: rgba(255,255,255,0.2); }
+
+        .drawer-contact-info {
+            padding: 0.25rem 1.25rem 1.25rem;
+            display: flex; flex-direction: column; gap: 0.65rem;
+        }
+        .drawer-contact-row {
+            display: flex; align-items: center; gap: 0.75rem;
+            font-size: 0.85rem; color: var(--color-secondary-text);
+        }
+        .drawer-contact-row svg {
+            width: 15px; height: 15px; stroke: var(--color-muted-text);
+            flex-shrink: 0;
+        }
 
         .drawer-section { padding: 0.75rem 0.9rem; }
         .drawer-divider { height: 1px; background: var(--color-borders); margin: 0.4rem 1.25rem; }
@@ -157,7 +168,6 @@
         }
         .drawer-identity-text { overflow: hidden; }
         .drawer-identity-name { font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .drawer-identity-email { font-size: 0.76rem; color: var(--color-muted-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* --- Layout --- */
         .dashboard-main { max-width: 1160px; margin: 0 auto; padding: 2.75rem 2rem 5rem; }
@@ -301,7 +311,6 @@
             .grid-layout { grid-template-columns: 1fr; }
             .dashboard-main { padding: 2rem 1.25rem 4rem; }
             .header { padding: 0 1.25rem; }
-            .account-trigger-text { display: none; }
             .tracker-label { font-size: 0.6rem; max-width: 56px; }
         }
     </style>
@@ -316,13 +325,12 @@
     <div id="app">
         <header class="header">
             <a href="index.html" class="logo">VANTAGE<span>.</span></a>
-            <button class="account-trigger" id="account-trigger">
-                <span class="account-trigger-avatar" id="trigger-initials">--</span>
-                <span class="account-trigger-text">
-                    <span class="account-trigger-greeting" id="trigger-greeting">Welcome back</span>
-                    <span class="account-trigger-sub">Manage account</span>
-                </span>
-                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            <button class="hamburger-trigger" id="account-trigger" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
             </button>
         </header>
 
@@ -332,6 +340,19 @@
                 <span class="drawer-brand">VANTAGE<span>.</span></span>
                 <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
             </div>
+            
+            <div class="drawer-contact-info">
+                <div class="drawer-contact-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span id="drawer-email-top">—</span>
+                </div>
+                <div class="drawer-contact-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span id="drawer-phone-top">—</span>
+                </div>
+            </div>
+
+            <div class="drawer-divider" style="margin-top: 0;"></div>
 
             <div class="drawer-section">
                 <button class="drawer-link" data-anchor="#shipments-panel">
@@ -376,7 +397,6 @@
                 <span class="drawer-identity-avatar" id="drawer-initials">--</span>
                 <div class="drawer-identity-text">
                     <div class="drawer-identity-name" id="drawer-name">—</div>
-                    <div class="drawer-identity-email" id="drawer-email">—</div>
                 </div>
             </div>
         </aside>
@@ -394,10 +414,6 @@
                     <div class="account-name" id="account-name">—</div>
 
                     <div class="account-row">
-                        <span>Email</span>
-                        <span id="account-email-row">—</span>
-                    </div>
-                    <div class="account-row">
                         <span>Plan</span>
                         <span class="plan-badge">Enterprise</span>
                     </div>
@@ -408,10 +424,6 @@
                     <div class="account-row">
                         <span>Active Shipments</span>
                         <span>1</span>
-                    </div>
-                    <div class="account-row">
-                        <span>Contact Number</span>
-                        <span id="account-phone">—</span>
                     </div>
                 </section>
 
@@ -500,18 +512,16 @@
 
             document.getElementById('account-initials').textContent = initialsText;
             document.getElementById('account-name').textContent = fullName;
-            document.getElementById('account-email-row').textContent = user.email || '—';
             document.getElementById('account-created').textContent = formatDate(user.created_at);
-            document.getElementById('account-phone').textContent = meta.phone || 'Not provided';
 
-            // Header trigger + drawer identity: name only, no email up top
-            document.getElementById('trigger-initials').textContent = initialsText;
-            document.getElementById('trigger-greeting').textContent = firstName ? `Hi, ${firstName}` : 'Welcome back';
             document.getElementById('page-welcome').textContent = firstName ? `Welcome back, ${fullName}` : 'Welcome back';
 
             document.getElementById('drawer-initials').textContent = initialsText;
             document.getElementById('drawer-name').textContent = fullName;
-            document.getElementById('drawer-email').textContent = user.email || '—';
+
+            // Updated: Render email and phone numbers directly underneath the drawer logo
+            document.getElementById('drawer-email-top').textContent = user.email || '—';
+            document.getElementById('drawer-phone-top').textContent = meta.phone || 'Not provided';
         }
 
         async function checkSessionAndInit() {
