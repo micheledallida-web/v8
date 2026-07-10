@@ -990,6 +990,12 @@
             const initialModalHTML = signupBody.innerHTML;
 
             const setActiveTab = (tabName) => {
+                // If we're currently showing a success/failure screen, the tabbed
+                // form panels won't be in the DOM — restore them first so the
+                // tab switch actually has something to switch to.
+                if (!signupBody.querySelector('.modal-panel')) {
+                    signupBody.innerHTML = initialModalHTML;
+                }
                 signupBody.querySelectorAll('.modal-panel').forEach(panel => {
                     panel.classList.toggle('is-active', panel.dataset.panel === tabName);
                 });
