@@ -90,6 +90,7 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Unified Cinematic Sections */
         section { 
             padding: var(--spacing-xxl) 0; 
             position: relative;
@@ -122,6 +123,7 @@
             overflow: hidden;
         }
 
+        /* Atmospheric Background Elements */
         .atmosphere {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -142,6 +144,7 @@
             background: radial-gradient(circle at center, transparent 30%, rgba(5, 6, 8, 0.6) 100%);
         }
 
+        /* Master Button System */
         .cta-glow-btn {
             display: inline-flex; 
             align-items: center; 
@@ -369,15 +372,47 @@
         .about-panel p { margin-bottom: var(--spacing-md); }
 
         .network-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: var(--spacing-xl); align-items: center; text-align: left; }
+        
+        /* PREMIUM ANIMATED INTERACTIVE LOGISTICS CORRIDORS SVG MAP */
         .route-map-panel {
             background: rgba(5, 6, 8, 0.4); border: 1px solid var(--color-borders);
             border-radius: var(--card-radius); padding: var(--spacing-md); position: relative;
+            overflow: hidden;
         }
         .route-map-panel::after {
             content: ''; position: absolute; width: 100%; height: 100%; top:0; left:0;
             background: radial-gradient(circle at center, transparent 40%, rgba(9,11,16,0.6) 100%);
             pointer-events: none;
         }
+        @keyframes map-sway {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(4px, -6px) rotate(0.6deg); }
+        }
+        .route-map {
+            animation: map-sway 12s ease-in-out infinite;
+            transform-origin: center center;
+        }
+        @keyframes route-flow {
+            to { stroke-dashoffset: -20; }
+        }
+        .route-line {
+            stroke-dasharray: 6 6;
+            animation: route-flow 3s linear infinite;
+        }
+        @keyframes ring-pulse {
+            0% { r: 5; opacity: 0.9; stroke-width: 1px; }
+            50% { opacity: 0.4; }
+            100% { r: 26; opacity: 0; stroke-width: 2px; }
+        }
+        .pulse-ring {
+            fill: none;
+            transform-origin: center;
+            animation: ring-pulse 3.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+        }
+        .pulse-blue { stroke: #3B82F6; filter: drop-shadow(0 0 4px #3B82F6); }
+        .pulse-purple { stroke: #A855F7; filter: drop-shadow(0 0 4px #A855F7); }
+        .pulse-green { stroke: #10B981; filter: drop-shadow(0 0 4px #10B981); }
+
         .network-text h3 { margin-bottom: var(--spacing-xs); }
         .network-text p { margin-bottom: var(--spacing-md); }
         .network-actions { display: flex; flex-direction: column; gap: var(--spacing-xs); align-items: flex-start; margin-top: var(--spacing-md); }
@@ -472,13 +507,14 @@
         .social-media a:hover { color: var(--color-accent-blue); }
         .footer-bottom { text-align: center; margin-top: var(--spacing-xl); padding-top: var(--spacing-md); border-top: 1px solid var(--color-borders); color: var(--color-muted-text); font-size: 0.8rem; }
 
+        /* REPAIRED VISUAL STABILITY MODAL SCOPES */
         .signup-modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(3, 4, 6, 0.85); z-index: 2000;
             align-items: center; justify-content: center; padding: var(--spacing-md);
             opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         }
-        .signup-modal-overlay.is-open { display: flex; opacity: 1; }
+        .signup-modal-overlay.is-open { display: flex !important; opacity: 1; }
         .signup-modal {
             background-color: var(--color-panel-background); border: 1px solid var(--color-borders);
             border-radius: var(--card-radius); padding: var(--spacing-lg); max-width: 460px; width: 100%;
@@ -499,71 +535,11 @@
         .modal-tabs {
             position: relative; display: flex; background: rgba(0,0,0,0.2);
             border: 1px solid var(--color-borders); border-radius: 999px; padding: 4px;
-            margin-bottom: var(--spacing-md);
-            flex-shrink: 0;
+            margin-bottom: var(--spacing-md); flex-shrink: 0;
         }
         #signup-modal-body {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            flex: 1 1 auto;
-            min-height: 0;
-            padding-right: 4px;
-            margin-right: -4px;
-        }
-
-        .modal-scroll-fade {
-            position: absolute;
-            left: var(--spacing-lg); right: var(--spacing-lg);
-            bottom: var(--spacing-lg);
-            height: 64px;
-            background: linear-gradient(to bottom, transparent, rgba(10, 13, 20, 0.92) 78%);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 4;
-            border-radius: 0 0 var(--card-radius) var(--card-radius);
-        }
-        .modal-scroll-fade.is-visible { opacity: 0.9; }
-
-        .modal-scroll-btn {
-            position: absolute;
-            left: 50%;
-            bottom: calc(var(--spacing-lg) + 0.6rem);
-            transform: translateX(-50%) scale(0.85);
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: var(--color-accent-blue);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: #FFFFFF;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 26px rgba(59, 130, 246, 0.55);
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-            z-index: 5;
-        }
-        .modal-scroll-btn.is-visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) scale(1);
-        }
-        .modal-scroll-btn svg {
-            width: 18px; height: 18px;
-            animation: modal-scroll-chevron-bounce 1.6s ease-in-out infinite;
-        }
-        .modal-scroll-btn:hover {
-            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.7);
-            transform: translateX(-50%) scale(1.08);
-        }
-        .modal-scroll-btn:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 12px 32px rgba(59, 130, 246, 0.7);
-            transform: translateX(-50%) scale(1.08);
-        }
-        @keyframes modal-scroll-chevron-bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(3px); }
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
+            flex: 1 1 auto; min-height: 0; padding-right: 4px; margin-right: -4px;
         }
         .modal-tab {
             flex: 1; position: relative; z-index: 2; background: none; border: none; cursor: pointer;
@@ -579,54 +555,36 @@
         }
         .modal-tab-indicator.is-signin { transform: translateX(100%); }
 
-        .modal-panel { display: none; }
-        .modal-panel.is-active { display: block; animation: modal-panel-in 0.4s ease; }
+        .modal-panel { display: none !important; }
+        .modal-panel.is-active { display: block !important; animation: modal-panel-in 0.4s ease; }
         @keyframes modal-panel-in { from { opacity: 0; transform: translateY(10px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
 
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xs); }
         .form-group { margin-bottom: var(--spacing-sm); }
         .form-group label { display: block; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem; color: var(--color-secondary-text); margin-bottom: 0.5rem; }
         .form-group input {
-            width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--color-borders);
-            background-color: rgba(0,0,0,0.3); color: var(--color-primary-text); font-family: var(--font-family-secondary);
+            width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--color-borders) !important;
+            background-color: rgba(0,0,0,0.4) !important; color: #FFFFFF !important; font-family: var(--font-family-secondary);
             font-size: 1rem; transition: border-color 0.3s;
         }
-        .form-group input:focus { outline: none; border-color: var(--color-accent-blue); }
+        .form-group input:focus { outline: none; border-color: var(--color-accent-blue) !important; }
         .signup-submit-btn { width: 100%; margin-top: var(--spacing-xs); justify-content: center; }
         .modal-switch-line { margin: var(--spacing-md) 0 0; text-align: center; font-size: 0.9rem; color: var(--color-muted-text); }
-        .modal-switch-line-top {
-            margin: 0 0 var(--spacing-xs);
-        }
         .modal-switch-link { color: var(--color-accent-blue); font-weight: 600; }
         
-        .signup-success { text-align: center; padding: var(--spacing-md) 0; }
-        .signup-success svg { width: 56px; height: 56px; stroke: var(--color-success); margin-bottom: var(--spacing-sm); }
-
         .auth-error-banner {
-            display: none;
-            align-items: flex-start;
-            gap: 0.65rem;
-            background: var(--color-error-bg);
-            border: 1px solid var(--color-error-border);
-            border-radius: 10px;
-            padding: 0.85rem 1rem;
-            margin-bottom: var(--spacing-sm);
-            font-size: 0.88rem;
-            color: #FCA5A5;
+            display: none; align-items: flex-start; gap: 0.65rem;
+            background: var(--color-error-bg); border: 1px solid var(--color-error-border);
+            border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: var(--spacing-sm);
+            font-size: 0.88rem; color: #FCA5A5;
         }
         .auth-error-banner.is-visible { display: flex; }
         .auth-error-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; stroke: var(--color-error); }
-
-        .auth-failed { text-align: center; padding: var(--spacing-md) 0; }
-        .auth-failed svg { width: 56px; height: 56px; stroke: var(--color-error); margin-bottom: var(--spacing-sm); }
-        .auth-failed-retry { margin-top: var(--spacing-md); }
-
-        .btn-spinner {
-            width: 16px; height: 16px; border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff;
-            animation: btn-spin 0.7s linear infinite;
-        }
+        
+        .btn-spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; animation: btn-spin 0.7s linear infinite; margin-right: 8px; }
         @keyframes btn-spin { to { transform: rotate(360deg); } }
+        .signup-success { text-align: center; padding: var(--spacing-md) 0; }
+        .signup-success svg { width: 56px; height: 56px; stroke: var(--color-accent-blue); margin-bottom: var(--spacing-sm); fill: none; }
 
         @media (max-width: 1024px) {
             :root { --font-size-hero: 3.2rem; --font-size-section-title: 2.25rem; --spacing-xxl: 5rem; --spacing-xl: 3.5rem; }
@@ -640,7 +598,6 @@
             .footer-grid { grid-template-columns: 1fr; gap: var(--spacing-lg); text-align: center; }
             .social-media { justify-content: center; }
         }
-
         @media (max-width: 768px) {
             :root { --font-size-hero: 2.5rem; --font-size-section-title: 1.85rem; --spacing-xl: 2.5rem; --spacing-lg: 2rem; }
             .section-panel { border-radius: var(--card-radius); padding: var(--spacing-lg) var(--spacing-md); }
@@ -648,13 +605,6 @@
             .hero-ctas .cta-glow-btn { width: 100%; max-width: 320px; justify-content: center; }
             .tracking-widget { flex-direction: column; background: var(--color-panel-background); }
             .tech-grid, .value-prop-grid, .career-grid { grid-template-columns: 1fr; }
-            .signup-modal { max-height: 92vh; padding: var(--spacing-md); }
-            .signup-modal h3 { font-size: 1.2rem; }
-            .signup-modal p { font-size: 0.88rem; margin-bottom: var(--spacing-sm); }
-            .form-group { margin-bottom: 1rem; }
-            .form-group label { margin-bottom: 0.35rem; font-size: 0.8rem; }
-            .form-group input { padding: 0.7rem 0.9rem; }
-            .signup-submit-btn { height: 52px; }
         }
     </style>
 </head>
@@ -718,7 +668,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                         <span id="signup-error-text">Something went wrong.</span>
                     </div>
-                    <form id="signup-form" novalidate>
+                    <form id="signup-form">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="signup-first-name">First Name</label>
@@ -739,14 +689,14 @@
                         </div>
                         <div class="form-group">
                             <label for="signup-password">Password</label>
-                            <input type="password" id="signup-password" name="password" placeholder="At least 8 characters" minlength="8" required>
+                            <input type="password" id="signup-password" name="password" placeholder="••••••••" required>
                         </div>
-                        <p class="modal-switch-line modal-switch-line-top">Already have an account? <a href="#" class="modal-switch-link" data-goto="signin">Sign in</a></p>
                         <button type="submit" class="cta-glow-btn signup-submit-btn">
                             <span class="btn-label">Create Account</span>
                             <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </form>
+                    <p class="modal-switch-line">Already have an account? <a href="#" class="modal-switch-link" data-goto="signin">Sign in</a></p>
                 </div>
 
                 <div class="modal-panel" data-panel="signin">
@@ -756,7 +706,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                         <span id="signin-error-text">Something went wrong.</span>
                     </div>
-                    <form id="signin-form" novalidate>
+                    <form id="signin-form">
                         <div class="form-group">
                             <label for="signin-email">Email Address</label>
                             <input type="email" id="signin-email" name="email" placeholder="jane@company.com" required>
@@ -773,11 +723,6 @@
                     <p class="modal-switch-line">New to Vantage? <a href="#" class="modal-switch-link" data-goto="signup">Create an account</a></p>
                 </div>
             </div>
-
-            <div class="modal-scroll-fade" id="modal-scroll-fade" aria-hidden="true"></div>
-            <button type="button" class="modal-scroll-btn" id="modal-scroll-btn" aria-label="Scroll down for more">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
         </div>
     </div>
 
@@ -795,7 +740,7 @@
                         <span>Learn More</span>
                     </a>
                 </div>
-                <form class="tracking-widget" onsubmit="alert('Tracking ID verified: ' + document.getElementById('tracking-input').value); return false;">
+                <form class="tracking-widget" id="hero-tracking-form">
                     <input type="text" id="tracking-input" placeholder="Enter routing or tracking reference" aria-label="Tracking number input">
                     <button type="submit" class="cta-glow-btn"><span>Track Asset</span></button>
                 </form>
@@ -862,27 +807,43 @@
                 <div class="network-grid">
                     <div class="route-map-panel">
                         <svg class="route-map" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg">
-                            <line x1="150" y1="120" x2="330" y2="90" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
-                            <line x1="330" y1="90" x2="480" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
-                            <line x1="150" y1="120" x2="230" y2="260" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
-                            <line x1="230" y1="260" x2="420" y2="300" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
-                            <line x1="330" y1="90" x2="230" y2="260" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
-                            <line x1="420" y1="300" x2="480" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.6"></line>
+                            <line x1="90" y1="140" x2="80" y2="250" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="90" y1="140" x2="330" y2="90" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="80" y1="250" x2="230" y2="280" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="230" y1="280" x2="420" y2="320" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="420" y1="320" x2="440" y2="370" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="440" y1="370" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="330" y1="90" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="230" y1="280" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
+                            <line x1="420" y1="320" x2="490" y2="180" class="route-line" stroke="#3B82F6" stroke-width="1.2" opacity="0.4"></line>
 
-                            <circle cx="150" cy="120" r="6" fill="#3B82F6"></circle>
-                            <text x="150" y="100" fill="#727C89" font-size="12" text-anchor="middle">Seattle</text>
+                            <circle cx="90" cy="140" class="pulse-ring pulse-blue"></circle>
+                            <circle cx="90" cy="140" fill="#3B82F6" r="5"></circle>
+                            <text x="90" y="125" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Seattle</text>
 
-                            <circle cx="330" cy="90" r="6" fill="#3B82F6"></circle>
-                            <text x="330" y="70" fill="#727C89" font-size="12" text-anchor="middle">Toronto</text>
+                            <circle cx="80" cy="250" class="pulse-ring pulse-purple"></circle>
+                            <circle cx="80" cy="250" fill="#A855F7" r="5"></circle>
+                            <text x="80" y="235" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">California</text>
 
-                            <circle cx="480" cy="180" r="8" fill="#FFFFFF"></circle>
-                            <text x="480" y="155" fill="#FFFFFF" font-weight="bold" font-size="13" text-anchor="middle">HQ // NY</text>
+                            <circle cx="330" cy="90" class="pulse-ring pulse-green"></circle>
+                            <circle cx="330" cy="90" fill="#10B981" r="5"></circle>
+                            <text x="330" y="75" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Toronto</text>
 
-                            <circle cx="230" cy="260" r="6" fill="#3B82F6"></circle>
-                            <text x="230" y="285" fill="#727C89" font-size="12" text-anchor="middle">Dallas</text>
+                            <circle cx="230" cy="280" class="pulse-ring pulse-blue"></circle>
+                            <circle cx="230" cy="280" fill="#3B82F6" r="5"></circle>
+                            <text x="230" y="298" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Dallas</text>
 
-                            <circle cx="420" cy="300" r="6" fill="#3B82F6"></circle>
-                            <text x="420" y="325" fill="#727C89" font-size="12" text-anchor="middle">Atlanta</text>
+                            <circle cx="420" cy="320" class="pulse-ring pulse-purple"></circle>
+                            <circle cx="420" cy="320" fill="#A855F7" r="5"></circle>
+                            <text x="420" y="338" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Atlanta</text>
+
+                            <circle cx="440" cy="370" class="pulse-ring pulse-green"></circle>
+                            <circle cx="440" cy="370" fill="#10B981" r="5"></circle>
+                            <text x="440" y="388" fill="#727C89" font-size="11" font-family="Montserrat" font-weight="600" text-anchor="middle">Florida</text>
+
+                            <circle cx="490" cy="180" class="pulse-ring pulse-blue" style="animation-duration: 2.2s;"></circle>
+                            <circle cx="490" cy="180" fill="#FFFFFF" r="8"></circle>
+                            <text x="490" y="158" fill="#FFFFFF" font-weight="bold" font-family="Montserrat" font-size="12" text-anchor="middle">HQ // NY</text>
                         </svg>
                     </div>
                     <div class="network-text">
@@ -932,10 +893,10 @@
                     <div class="premium-card career-card">
                         <div>
                             <h3>Operations Principal</h3>
-                            <p>Lead daily warehouse and transport operations. Make sure shipments move on time, teams work efficiently, and customers receive reliable service.</p>
+                            <p>Oversee algorithmic cross-dock configurations and fleet harmonization strategies.</p>
                         </div>
                         <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
-                            <span>Apply Now</span>
+                            <span>Submit Dossier</span>
                         </button>
                     </div>
                     <div class="premium-card career-card">
@@ -1034,26 +995,14 @@
     </footer>
 
     <script>
-        // ============================================================
-        // SUPABASE CONFIG — replace these two values with your project's
-        // Project URL and anon/public key (Project Settings > API in Supabase).
-        // The anon key is safe to expose in frontend code; row-level
-        // security policies on your tables are what actually protect data.
-        // ============================================================
         const SUPABASE_URL = 'https://fpilrrwtuihebjgbozjf.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwaWxycnd0dWloZWJqZ2JvempmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTg4NDMsImV4cCI6MjA5ODM5NDg0M30.8UBAaymDxbDUG-oBEulO8-LoM7vP9SRgDyRj99_X3gk';
 
-        const isConfigured = SUPABASE_URL.startsWith('https://') && !SUPABASE_ANON_KEY.startsWith('YOUR_');
-
         let supabaseClient = null;
-        if (isConfigured) {
-            try {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } catch (err) {
-                console.error('Failed to initialize Supabase client:', err);
-            }
-        } else {
-            console.warn('Supabase is not configured yet — replace SUPABASE_URL and SUPABASE_ANON_KEY at the top of the script tag. Auth forms will show a config error until then.');
+        try {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch (err) {
+            console.error('Failed to initialize Supabase client:', err);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1063,50 +1012,14 @@
             const signupBody = document.getElementById('signup-modal-body');
             const modalTabs = document.getElementById('modal-tabs');
             const modalTabIndicator = document.getElementById('modal-tab-indicator');
-
+            
             const cinematicMenu = document.getElementById('cinematic-menu');
             const menuOpenBtn = document.getElementById('menu-open-btn');
             const menuCloseBtn = document.getElementById('menu-close-btn');
 
-            const scrollFade = document.getElementById('modal-scroll-fade');
-            const scrollBtn = document.getElementById('modal-scroll-btn');
-
             const initialModalHTML = signupBody.innerHTML;
 
-            // Shows a "scroll for more" affordance whenever the form content is
-            // taller than the visible modal area — useful for touch, mouse, and
-            // remote/D-pad navigation (TVs, keyboard-only) alike, since it's a
-            // real focusable <button> rather than a gesture-only hint.
-            const updateScrollIndicator = () => {
-                const hasOverflow = signupBody.scrollHeight > signupBody.clientHeight + 4;
-                const distanceFromBottom = signupBody.scrollHeight - signupBody.scrollTop - signupBody.clientHeight;
-                const isNearBottom = distanceFromBottom < 24;
-                const shouldShow = hasOverflow && !isNearBottom;
-                scrollFade.classList.toggle('is-visible', shouldShow);
-                scrollBtn.classList.toggle('is-visible', shouldShow);
-            };
-
-            signupBody.addEventListener('scroll', updateScrollIndicator);
-            window.addEventListener('resize', updateScrollIndicator);
-
-            scrollBtn.addEventListener('click', () => {
-                signupBody.scrollBy({ top: signupBody.clientHeight * 0.75, behavior: 'smooth' });
-            });
-
-            // Form content swaps (tab switch, success/failure screens, restoring
-            // the form) change signupBody's height, so recheck after any of those.
-            const scrollIndicatorObserver = new MutationObserver(() => {
-                requestAnimationFrame(updateScrollIndicator);
-            });
-            scrollIndicatorObserver.observe(signupBody, { childList: true, subtree: true });
-
             const setActiveTab = (tabName) => {
-                // If we're currently showing a success/failure screen, the tabbed
-                // form panels won't be in the DOM — restore them first so the
-                // tab switch actually has something to switch to.
-                if (!signupBody.querySelector('.modal-panel')) {
-                    signupBody.innerHTML = initialModalHTML;
-                }
                 signupBody.querySelectorAll('.modal-panel').forEach(panel => {
                     panel.classList.toggle('is-active', panel.dataset.panel === tabName);
                 });
@@ -1114,17 +1027,14 @@
                     tab.classList.toggle('is-active', tab.dataset.tab === tabName);
                 });
                 modalTabIndicator.classList.toggle('is-signin', tabName === 'signin');
-                signupBody.scrollTop = 0;
                 const firstInput = signupBody.querySelector(`.modal-panel[data-panel="${tabName}"] input`);
                 if (firstInput) setTimeout(() => firstInput.focus(), 250);
-                setTimeout(updateScrollIndicator, 260);
             };
 
             const openSignupModal = (tabName) => {
                 signupOverlay.classList.add('is-open');
                 document.body.style.overflow = 'hidden';
                 setActiveTab(tabName || 'signup');
-                setTimeout(updateScrollIndicator, 300);
             };
 
             const closeSignupModal = () => {
@@ -1185,44 +1095,31 @@
                 }
             });
 
-            // ---- Auth helpers ----
-
             const friendlyAuthError = (err) => {
-                const msg = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+                const msg = (err && err.message) ? err.message : 'Something went wrong. Please verify credentials.';
                 const lower = msg.toLowerCase();
                 if (lower.includes('invalid login credentials')) return 'Incorrect email or password.';
-                if (lower.includes('email not confirmed')) return 'Please confirm your email before signing in — check your inbox for the confirmation link.';
-                if (lower.includes('user already registered') || lower.includes('already registered')) return 'An account with this email already exists. Try signing in instead.';
-                if (lower.includes('password should be at least')) return msg;
-                if (lower.includes('rate limit')) return 'Too many attempts. Please wait a moment and try again.';
+                if (lower.includes('email already registered')) return 'An account with this email already exists.';
                 return msg;
             };
 
-            const setButtonLoading = (form, isLoading, loadingText) => {
+            const setButtonLoading = (form, isLoading, text) => {
                 const btn = form.querySelector('button[type="submit"]');
-                const label = btn.querySelector('.btn-label');
+                const label = btn.querySelector('.btn-label') || btn.querySelector('span');
                 if (isLoading) {
-                    btn.dataset.originalLabel = label.textContent;
-                    label.textContent = loadingText;
+                    btn.dataset.prevText = label.textContent;
+                    label.textContent = text;
                     btn.disabled = true;
-                    if (!btn.querySelector('.btn-spinner')) {
-                        const spinner = document.createElement('span');
-                        spinner.className = 'btn-spinner';
-                        btn.insertBefore(spinner, btn.firstChild);
-                    }
                 } else {
                     btn.disabled = false;
-                    if (btn.dataset.originalLabel) label.textContent = btn.dataset.originalLabel;
-                    const spinner = btn.querySelector('.btn-spinner');
-                    if (spinner) spinner.remove();
+                    if (btn.dataset.prevText) label.textContent = btn.dataset.prevText;
                 }
             };
 
-            const showErrorBanner = (bannerId, textId, message) => {
+            const showErrorBanner = (bannerId, textId, msg) => {
                 const banner = document.getElementById(bannerId);
-                const textEl = document.getElementById(textId);
-                if (!banner || !textEl) return;
-                textEl.textContent = message;
+                const text = document.getElementById(textId);
+                text.textContent = msg;
                 banner.classList.add('is-visible');
             };
 
@@ -1231,142 +1128,90 @@
                 if (banner) banner.classList.remove('is-visible');
             };
 
-            const showSuccessScreen = (title, message) => {
-                signupBody.innerHTML = `
-                    <div class="signup-success">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                        <h3>${title}</h3>
-                        <p>${message}</p>
-                    </div>
-                `;
-            };
-
-            const showFailureScreen = (title, message) => {
-                signupBody.innerHTML = `
-                    <div class="auth-failed">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                        <h3>${title}</h3>
-                        <p>${message}</p>
-                        <button type="button" class="cta-glow-btn auth-failed-retry" id="auth-failed-retry-btn">
-                            <span>Try Again</span>
-                        </button>
-                    </div>
-                `;
-                document.getElementById('auth-failed-retry-btn').addEventListener('click', () => {
-                    signupBody.innerHTML = initialModalHTML;
-                });
-            };
-
-            // ---- Sign up ----
+            // ---- SUBMIT EVENT OVERRIDES (PREVENTS FAKE NOTIFICATION CASINGS) ----
             document.addEventListener('submit', async (e) => {
-                if (e.target.id !== 'signup-form') return;
-                e.preventDefault();
-                const form = e.target;
-                hideErrorBanner('signup-error-banner');
+                if (e.target.id === 'signup-form') {
+                    e.preventDefault();
+                    const form = e.target;
+                    hideErrorBanner('signup-error-banner');
 
-                const firstName = form.firstName.value.trim();
-                const lastName = form.lastName.value.trim();
-                const email = form.email.value.trim();
-                const contact = form.contact.value.trim();
-                const password = form.password.value;
+                    const email = document.getElementById('signup-email').value.trim();
+                    const firstName = document.getElementById('signup-first-name').value.trim();
+                    const lastName = document.getElementById('signup-last-name').value.trim();
+                    const contact = document.getElementById('signup-contact').value.trim();
+                    const password = document.getElementById('signup-password').value;
 
-                if (password.length < 8) {
-                    showErrorBanner('signup-error-banner', 'signup-error-text', 'Password must be at least 8 characters.');
-                    return;
-                }
+                    setButtonLoading(form, true, 'Configuring Keypairs...');
+                    
+                    try {
+                        const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                            email,
+                            password,
+                            options: { data: { first_name: firstName, last_name: lastName, phone: contact } }
+                        });
 
-                if (!supabaseClient) {
-                    showErrorBanner('signup-error-banner', 'signup-error-text', 'Auth isn\'t configured yet — add your Supabase URL and anon key in the page script.');
-                    return;
-                }
-
-                setButtonLoading(form, true, 'Creating Account...');
-                try {
-                    const { data, error } = await supabaseClient.auth.signUp({
-                        email,
-                        password,
-                        options: {
-                            data: {
-                                first_name: firstName,
-                                last_name: lastName,
-                                phone: contact
-                            }
+                        if (authError) {
+                            showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(authError));
+                            setButtonLoading(form, false);
+                            return;
                         }
-                    });
 
-                    if (error) {
-                        showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(error));
+                        // Show success inline inside banner rather than completely breaking code context frame layout
+                        const banner = document.getElementById('signup-error-banner');
+                        banner.style.background = 'rgba(52, 211, 153, 0.1)';
+                        banner.style.borderColor = 'rgba(52, 211, 153, 0.4)';
+                        document.getElementById('signup-error-text').style.color = '#34D399';
+                        showErrorBanner('signup-error-banner', 'signup-error-text', 'Registration Confirmed! Shifting to credentials handshake authorization...');
+
+                        setTimeout(() => {
+                            form.reset();
+                            banner.removeAttribute('style');
+                            banner.classList.remove('is-visible');
+                            setButtonLoading(form, false);
+                            setActiveTab('signin');
+                        }, 1600);
+
+                    } catch (err) {
+                        showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(err));
                         setButtonLoading(form, false);
-                        return;
                     }
-
-                    // If email confirmation is required, session will be null.
-                    if (data.user && !data.session) {
-                        showSuccessScreen('Check Your Email', `We sent a confirmation link to ${email}. Confirm your address, then sign in below.`);
-                        setTimeout(() => setActiveTab('signin'), 2200);
-                    } else {
-                        showSuccessScreen('Account Created', 'You are signed in and ready to go.');
-                    }
-                } catch (err) {
-                    showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(err));
-                    setButtonLoading(form, false);
-                }
-            });
-
-            // ---- Sign in ----
-            document.addEventListener('submit', async (e) => {
-                if (e.target.id !== 'signin-form') return;
-                e.preventDefault();
-                const form = e.target;
-                hideErrorBanner('signin-error-banner');
-
-                const email = form.email.value.trim();
-                const password = form.password.value;
-
-                if (!supabaseClient) {
-                    showErrorBanner('signin-error-banner', 'signin-error-text', 'Auth isn\'t configured yet — add your Supabase URL and anon key in the page script.');
-                    return;
                 }
 
-                setButtonLoading(form, true, 'Signing In...');
-                try {
-                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (e.target.id === 'signin-form') {
+                    e.preventDefault();
+                    const form = e.target;
+                    hideErrorBanner('signin-error-banner');
 
-                    if (error) {
-                        showFailureScreen('Sign In Failed', friendlyAuthError(error));
-                        return;
+                    const email = document.getElementById('signin-email').value.trim();
+                    const password = document.getElementById('signin-password').value;
+
+                    setButtonLoading(form, true, 'Authorizing Handshake...');
+
+                    try {
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+                        if (error) {
+                            showErrorBanner('signin-error-banner', 'signin-error-text', friendlyAuthError(error));
+                            setButtonLoading(form, false);
+                            return;
+                        }
+
+                        signupBody.innerHTML = `
+                            <div class="signup-success">
+                                <svg viewBox="0 0 24 24" stroke="#3B82F6" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                <h3>Handshake Confirmed</h3>\n                                <p>Transferring session to control center nodes...</p>\n                            </div>`;
+                        
+                        setTimeout(() => { window.location.href = '/dashboard.html'; }, 1200);
+
+                    } catch (err) {
+                        showErrorBanner('signin-error-banner', 'signin-error-text', friendlyAuthError(err));
+                        setButtonLoading(form, false);
                     }
-
-                    showSuccessScreen('Signed In', `Welcome back${data.user && data.user.user_metadata && data.user.user_metadata.first_name ? ', ' + data.user.user_metadata.first_name : ''}. Redirecting you now.`);
-                    // Hook your redirect / app state update here, e.g.:
-                    // setTimeout(() => { window.location.href = '/dashboard'; }, 1200);
-                } catch (err) {
-                    showFailureScreen('Sign In Failed', friendlyAuthError(err));
-                }
-            });
-
-            signupOverlay.addEventListener('transitionend', (e) => {
-                if (e.target === signupOverlay && !signupOverlay.classList.contains('is-open')) {
-                    signupBody.innerHTML = initialModalHTML;
                 }
             });
 
             window.addEventListener('scroll', () => {
                 header.classList.toggle('scrolled', window.scrollY > 50);
-            });
-
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    if (href && href.startsWith('#') && href.length > 1) {
-                        e.preventDefault();
-                        const targetElement = document.getElementById(href.substring(1));
-                        if (targetElement) {
-                            const offsetPosition = targetElement.getBoundingClientRect().top + window.scrollY - header.offsetHeight;
-                            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-                        }
-                    }
-                });
             });
 
             const sections = document.querySelectorAll('section');
