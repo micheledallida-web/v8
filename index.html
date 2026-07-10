@@ -1,3 +1,11 @@
+I want this to be like à moving map, rotating toward each other. Add two more. Like California and Florida. 2 blue, purple and green around the incon placeholders
+
+
+
+Here is the code :
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +14,7 @@
     <title>Vantage Logistics - Enterprise Landing Page</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3EV%3C/text%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --color-background: #050608;
@@ -19,6 +28,10 @@
             --color-secondary-text: #AAB3C2;
             --color-muted-text: #727C89;
             --color-borders: rgba(255, 255, 255, 0.06);
+            --color-error: #F87171;
+            --color-error-bg: rgba(248, 113, 113, 0.08);
+            --color-error-border: rgba(248, 113, 113, 0.35);
+            --color-success: #34D399;
 
             --font-family-primary: 'Montserrat', sans-serif;
             --font-family-secondary: 'Roboto', sans-serif;
@@ -85,7 +98,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Unified Cinematic Sections */
         section { 
             padding: var(--spacing-xxl) 0; 
             position: relative;
@@ -118,7 +130,6 @@
             overflow: hidden;
         }
 
-        /* Atmospheric Background Elements */
         .atmosphere {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -139,7 +150,6 @@
             background: radial-gradient(circle at center, transparent 30%, rgba(5, 6, 8, 0.6) 100%);
         }
 
-        /* Master Button System */
         .cta-glow-btn {
             display: inline-flex; 
             align-items: center; 
@@ -167,6 +177,12 @@
             box-shadow: 0 0 45px rgba(59, 130, 246, 0.45); 
             transform: translateY(-3px); 
         }
+        .cta-glow-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
         .cta-glow-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
         .cta-glow-btn .cta-chevron { transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .cta-glow-btn:hover .cta-chevron { transform: translateX(6px); }
@@ -182,7 +198,6 @@
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
         }
 
-        /* Outline Icons Setup */
         .premium-icon-wrapper {
             width: 64px; height: 64px; 
             border-radius: 50%; 
@@ -200,7 +215,6 @@
         }
         .premium-icon-wrapper svg { width: 24px; height: 24px; stroke: var(--color-accent-blue); stroke-width: 2; fill: none; position: relative; z-index: 2; }
 
-        /* Capsule Badges */
         .premium-capsule {
             display: inline-flex; align-items: center; gap: 0.75rem;
             background: rgba(255, 255, 255, 0.02);
@@ -221,7 +235,6 @@
         .premium-capsule-divider { width: 1px; height: 18px; background-color: var(--color-borders); }
         .premium-capsule span:last-child { font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary-text); }
 
-        /* Unified Card Formats */
         .premium-card {
             background: rgba(15, 20, 30, 0.45);
             border: 1px solid var(--color-borders);
@@ -239,7 +252,6 @@
             box-shadow: 0 15px 40px rgba(59, 130, 246, 0.1), inset 0 0 15px rgba(59, 130, 246, 0.05);
         }
 
-        /* Floating Navbar Architecture */
         .header { 
             position: fixed; top: 24px; left: 50%; transform: translateX(-50%); 
             width: calc(100% - 48px); max-width: 1200px; height: 72px; z-index: 1000; 
@@ -285,7 +297,38 @@
 
         .mobile-nav-toggle { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: #FFFFFF; }
 
-        /* Cinematic Hero Architecture */
+        .cinematic-menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: radial-gradient(circle at 50% 30%, rgba(9, 15, 30, 0.96), #050608 100%);
+            z-index: 1050; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: var(--spacing-md);
+            opacity: 0; visibility: hidden; pointer-events: none;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .cinematic-menu-overlay.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+        
+        .cinematic-menu-close {
+            position: absolute; top: 32px; right: 32px; background: none; border: none;
+            color: var(--color-muted-text); font-size: 2rem; cursor: pointer; transition: color 0.3s;
+        }
+        .cinematic-menu-close:hover { color: var(--color-primary-text); }
+
+        .cinematic-menu-list { text-align: center; display: flex; flex-direction: column; gap: var(--spacing-sm); width: 100%; max-width: 320px; }
+        .cinematic-menu-item {
+            font-family: var(--font-family-primary); font-weight: 700; font-size: var(--font-size-subtitle);
+            color: var(--color-secondary-text); letter-spacing: -0.01em; display: block; padding: 0.5rem 0;
+            transition: transform 0.4s ease, color 0.4s ease; cursor: pointer;
+        }
+        .cinematic-menu-item:hover { color: var(--color-primary-text); transform: scale(1.04); }
+        .cinematic-menu-item.accent-link { color: var(--color-accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+
+        .cinematic-menu-divider {
+            width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--color-borders), transparent);
+            margin: var(--spacing-xs) 0;
+        }
+        .cinematic-menu-list .cta-glow-btn { width: 100%; justify-content: center; }
+
         .hero {
             min-height: 100vh; padding-top: calc(var(--header-height) + 40px);
             background: 
@@ -300,7 +343,6 @@
         .hero p { font-size: var(--font-size-subtitle); color: var(--color-secondary-text); max-width: 650px; margin: 0 auto var(--spacing-xl); }
         .hero-ctas { display: flex; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-xl); }
 
-        /* Glass Tracking Widget */
         .tracking-widget {
             background: rgba(12, 16, 24, 0.65);
             backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -316,13 +358,11 @@
         .tracking-widget input:focus { outline: none; border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
         .tracking-widget .cta-glow-btn { height: 54px; border-radius: 12px; box-shadow: none; }
 
-        /* Core Values / Grid Layouts */
         .value-prop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-md); }
         .value-card { text-align: left; padding: var(--spacing-lg) var(--spacing-md); }
         .value-card h3 { margin: var(--spacing-sm) 0 var(--spacing-xs); }
         .value-card p { margin-bottom: 0; }
 
-        /* VisionOS Layout Structure */
         .about-panel { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl); align-items: center; text-align: left; }
         .about-visual { position: relative; width: 100%; height: 380px; display: flex; align-items: center; justify-content: center; }
         .vision-sphere {
@@ -336,7 +376,6 @@
         .about-panel h2 { text-align: left; margin-bottom: var(--spacing-sm); }
         .about-panel p { margin-bottom: var(--spacing-md); }
 
-        /* Premium Network Mapping */
         .network-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: var(--spacing-xl); align-items: center; text-align: left; }
         .route-map-panel {
             background: rgba(5, 6, 8, 0.4); border: 1px solid var(--color-borders);
@@ -351,7 +390,6 @@
         .network-text p { margin-bottom: var(--spacing-md); }
         .network-actions { display: flex; flex-direction: column; gap: var(--spacing-xs); align-items: flex-start; margin-top: var(--spacing-md); }
 
-        /* Technology Modules */
         .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: var(--spacing-lg); }
         .tech-card { text-align: left; position: relative; overflow: hidden; padding: var(--spacing-lg); }
         .tech-card::before {
@@ -361,14 +399,12 @@
         }
         .tech-card h3 { margin: var(--spacing-sm) 0 var(--spacing-xs); }
 
-        /* Careers Section Structuring */
         .career-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg); }
         .career-card { text-align: left; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
         .career-card h3 { margin-bottom: var(--spacing-xs); }
         .career-card p { margin-bottom: var(--spacing-md); font-size: 1rem; color: var(--color-secondary-text); }
         .career-card .cta-glow-btn { align-self: flex-start; height: 48px; padding: 0 1.75rem; font-size: 0.8rem; }
 
-        /* Master Design Blueprint Section */
         .final-cta-section {
             background:
                 radial-gradient(ellipse 60% 50% at 50% 0%, rgba(59, 130, 246, 0.16), transparent 70%),
@@ -420,7 +456,6 @@
         .cta-note { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem !important; color: var(--color-secondary-text) !important; margin-bottom: 0 !important; }
         .cta-note svg { width: 15px; height: 15px; stroke: var(--color-secondary-text); flex-shrink: 0; }
 
-        /* Unified Cinematic Footer */
         .footer { 
             background: linear-gradient(to bottom, var(--color-secondary-background), #020304); 
             border-top: 1px solid var(--color-borders);
@@ -445,7 +480,6 @@
         .social-media a:hover { color: var(--color-accent-blue); }
         .footer-bottom { text-align: center; margin-top: var(--spacing-xl); padding-top: var(--spacing-md); border-top: 1px solid var(--color-borders); color: var(--color-muted-text); font-size: 0.8rem; }
 
-        /* Modal Settings */
         .signup-modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(3, 4, 6, 0.85); z-index: 2000;
@@ -456,6 +490,7 @@
         .signup-modal {
             background-color: var(--color-panel-background); border: 1px solid var(--color-borders);
             border-radius: var(--card-radius); padding: var(--spacing-lg); max-width: 460px; width: 100%;
+            max-height: 88vh; display: flex; flex-direction: column;
             position: relative; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
             transform: translateY(15px); transition: transform 0.3s ease;
         }
@@ -465,6 +500,7 @@
         .signup-modal-close {
             position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none;
             color: var(--color-muted-text); font-size: 1.75rem; cursor: pointer; transition: color 0.3s ease;
+            z-index: 3;
         }
         .signup-modal-close:hover { color: var(--color-primary-text); }
 
@@ -472,6 +508,70 @@
             position: relative; display: flex; background: rgba(0,0,0,0.2);
             border: 1px solid var(--color-borders); border-radius: 999px; padding: 4px;
             margin-bottom: var(--spacing-md);
+            flex-shrink: 0;
+        }
+        #signup-modal-body {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1 1 auto;
+            min-height: 0;
+            padding-right: 4px;
+            margin-right: -4px;
+        }
+
+        .modal-scroll-fade {
+            position: absolute;
+            left: var(--spacing-lg); right: var(--spacing-lg);
+            bottom: var(--spacing-lg);
+            height: 64px;
+            background: linear-gradient(to bottom, transparent, rgba(10, 13, 20, 0.92) 78%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 4;
+            border-radius: 0 0 var(--card-radius) var(--card-radius);
+        }
+        .modal-scroll-fade.is-visible { opacity: 0.9; }
+
+        .modal-scroll-btn {
+            position: absolute;
+            left: 50%;
+            bottom: calc(var(--spacing-lg) + 0.6rem);
+            transform: translateX(-50%) scale(0.85);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--color-accent-blue);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 26px rgba(59, 130, 246, 0.55);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+            z-index: 5;
+        }
+        .modal-scroll-btn.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) scale(1);
+        }
+        .modal-scroll-btn svg {
+            width: 18px; height: 18px;
+            animation: modal-scroll-chevron-bounce 1.6s ease-in-out infinite;
+        }
+        .modal-scroll-btn:hover {
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.7);
+            transform: translateX(-50%) scale(1.08);
+        }
+        .modal-scroll-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 12px 32px rgba(59, 130, 246, 0.7);
+            transform: translateX(-50%) scale(1.08);
+        }
+        @keyframes modal-scroll-chevron-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(3px); }
         }
         .modal-tab {
             flex: 1; position: relative; z-index: 2; background: none; border: none; cursor: pointer;
@@ -502,12 +602,40 @@
         .form-group input:focus { outline: none; border-color: var(--color-accent-blue); }
         .signup-submit-btn { width: 100%; margin-top: var(--spacing-xs); justify-content: center; }
         .modal-switch-line { margin: var(--spacing-md) 0 0; text-align: center; font-size: 0.9rem; color: var(--color-muted-text); }
+        .modal-switch-line-top {
+            margin: 0 0 var(--spacing-xs);
+        }
         .modal-switch-link { color: var(--color-accent-blue); font-weight: 600; }
         
         .signup-success { text-align: center; padding: var(--spacing-md) 0; }
-        .signup-success svg { width: 56px; height: 56px; stroke: var(--color-accent-blue); margin-bottom: var(--spacing-sm); }
+        .signup-success svg { width: 56px; height: 56px; stroke: var(--color-success); margin-bottom: var(--spacing-sm); }
 
-        /* Mobile Layout Stack Fixes */
+        .auth-error-banner {
+            display: none;
+            align-items: flex-start;
+            gap: 0.65rem;
+            background: var(--color-error-bg);
+            border: 1px solid var(--color-error-border);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.88rem;
+            color: #FCA5A5;
+        }
+        .auth-error-banner.is-visible { display: flex; }
+        .auth-error-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; stroke: var(--color-error); }
+
+        .auth-failed { text-align: center; padding: var(--spacing-md) 0; }
+        .auth-failed svg { width: 56px; height: 56px; stroke: var(--color-error); margin-bottom: var(--spacing-sm); }
+        .auth-failed-retry { margin-top: var(--spacing-md); }
+
+        .btn-spinner {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff;
+            animation: btn-spin 0.7s linear infinite;
+        }
+        @keyframes btn-spin { to { transform: rotate(360deg); } }
+
         @media (max-width: 1024px) {
             :root { --font-size-hero: 3.2rem; --font-size-section-title: 2.25rem; --spacing-xxl: 5rem; --spacing-xl: 3.5rem; }
             .header { top: 12px; width: calc(100% - 24px); }
@@ -528,6 +656,13 @@
             .hero-ctas .cta-glow-btn { width: 100%; max-width: 320px; justify-content: center; }
             .tracking-widget { flex-direction: column; background: var(--color-panel-background); }
             .tech-grid, .value-prop-grid, .career-grid { grid-template-columns: 1fr; }
+            .signup-modal { max-height: 92vh; padding: var(--spacing-md); }
+            .signup-modal h3 { font-size: 1.2rem; }
+            .signup-modal p { font-size: 0.88rem; margin-bottom: var(--spacing-sm); }
+            .form-group { margin-bottom: 1rem; }
+            .form-group label { margin-bottom: 0.35rem; font-size: 0.8rem; }
+            .form-group input { padding: 0.7rem 0.9rem; }
+            .signup-submit-btn { height: 52px; }
         }
     </style>
 </head>
@@ -551,10 +686,27 @@
                 <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
                     <span>Request Quote</span>
                 </button>
-                <button class="mobile-nav-toggle" aria-label="Open navigation menu">&#9776;</button>
+                <button class="mobile-nav-toggle" id="menu-open-btn" aria-label="Open navigation menu">&#9776;</button>
             </div>
         </div>
     </header>
+
+    <div class="cinematic-menu-overlay" id="cinematic-menu">
+        <button class="cinematic-menu-close" id="menu-close-btn" aria-label="Close navigation menu">&times;</button>
+        <div class="cinematic-menu-list">
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#tracking-input">Track Shipment</span>
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#services">Services</span>
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#about">About</span>
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#careers">Careers</span>
+            <span class="cinematic-menu-item modal-trigger" data-target-tab="signup">Contact</span>
+            <span class="cinematic-menu-item modal-trigger accent-link" data-target-tab="signin">Customer Login</span>
+            <div class="cinematic-menu-divider"></div>
+            <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
+                <span>Request a Quote</span>
+                <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
 
     <div class="signup-modal-overlay" id="signup-modal-overlay">
         <div class="signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-modal-title">
@@ -570,7 +722,11 @@
                 <div class="modal-panel is-active" data-panel="signup">
                     <h3 id="signup-modal-title">Get Started with Vantage</h3>
                     <p>Tell us a bit about you and our team will follow up right away.</p>
-                    <form id="signup-form">
+                    <div class="auth-error-banner" id="signup-error-banner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span id="signup-error-text">Something went wrong.</span>
+                    </div>
+                    <form id="signup-form" novalidate>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="signup-first-name">First Name</label>
@@ -589,18 +745,26 @@
                             <label for="signup-contact">Contact Number</label>
                             <input type="tel" id="signup-contact" name="contact" placeholder="+1 (555) 123-4567" required>
                         </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" name="password" placeholder="At least 8 characters" minlength="8" required>
+                        </div>
+                        <p class="modal-switch-line modal-switch-line-top">Already have an account? <a href="#" class="modal-switch-link" data-goto="signin">Sign in</a></p>
                         <button type="submit" class="cta-glow-btn signup-submit-btn">
-                            <span>Create Account</span>
+                            <span class="btn-label">Create Account</span>
                             <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </form>
-                    <p class="modal-switch-line">Already have an account? <a href="#" class="modal-switch-link" data-goto="signin">Sign in</a></p>
                 </div>
 
                 <div class="modal-panel" data-panel="signin">
                     <h3>Welcome Back</h3>
                     <p>Sign in to access your Vantage account.</p>
-                    <form id="signin-form">
+                    <div class="auth-error-banner" id="signin-error-banner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <span id="signin-error-text">Something went wrong.</span>
+                    </div>
+                    <form id="signin-form" novalidate>
                         <div class="form-group">
                             <label for="signin-email">Email Address</label>
                             <input type="email" id="signin-email" name="email" placeholder="jane@company.com" required>
@@ -610,13 +774,18 @@
                             <input type="password" id="signin-password" name="password" placeholder="••••••••" required>
                         </div>
                         <button type="submit" class="cta-glow-btn signup-submit-btn">
-                            <span>Sign In</span>
+                            <span class="btn-label">Sign In</span>
                             <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </form>
                     <p class="modal-switch-line">New to Vantage? <a href="#" class="modal-switch-link" data-goto="signup">Create an account</a></p>
                 </div>
             </div>
+
+            <div class="modal-scroll-fade" id="modal-scroll-fade" aria-hidden="true"></div>
+            <button type="button" class="modal-scroll-btn" id="modal-scroll-btn" aria-label="Scroll down for more">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
         </div>
     </div>
 
@@ -771,10 +940,10 @@
                     <div class="premium-card career-card">
                         <div>
                             <h3>Operations Principal</h3>
-                            <p>Oversee algorithmic cross-dock configurations and fleet harmonization strategies.</p>
+                            <p>Lead daily warehouse and transport operations. Make sure shipments move on time, teams work efficiently, and customers receive reliable service.</p>
                         </div>
                         <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
-                            <span>Submit Dossier</span>
+                            <span>Apply Now</span>
                         </button>
                     </div>
                     <div class="premium-card career-card">
@@ -790,7 +959,6 @@
             </div>
         </section>
 
-        <!-- MASTER DESIGN SYSTEM BASELINE (UNTOUCHED STYLING) -->
         <section id="quote" class="final-cta-section fade-in">
             <div class="cta-glow-line cta-glow-line-1"></div>
             <div class="cta-glow-line cta-glow-line-2"></div>
@@ -874,6 +1042,28 @@
     </footer>
 
     <script>
+        // ============================================================
+        // SUPABASE CONFIG — replace these two values with your project's
+        // Project URL and anon/public key (Project Settings > API in Supabase).
+        // The anon key is safe to expose in frontend code; row-level
+        // security policies on your tables are what actually protect data.
+        // ============================================================
+        const SUPABASE_URL = 'https://fpilrrwtuihebjgbozjf.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwaWxycnd0dWloZWJqZ2JvempmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTg4NDMsImV4cCI6MjA5ODM5NDg0M30.8UBAaymDxbDUG-oBEulO8-LoM7vP9SRgDyRj99_X3gk';
+
+        const isConfigured = SUPABASE_URL.startsWith('https://') && !SUPABASE_ANON_KEY.startsWith('YOUR_');
+
+        let supabaseClient = null;
+        if (isConfigured) {
+            try {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } catch (err) {
+                console.error('Failed to initialize Supabase client:', err);
+            }
+        } else {
+            console.warn('Supabase is not configured yet — replace SUPABASE_URL and SUPABASE_ANON_KEY at the top of the script tag. Auth forms will show a config error until then.');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.getElementById('header');
             const signupOverlay = document.getElementById('signup-modal-overlay');
@@ -882,9 +1072,49 @@
             const modalTabs = document.getElementById('modal-tabs');
             const modalTabIndicator = document.getElementById('modal-tab-indicator');
 
+            const cinematicMenu = document.getElementById('cinematic-menu');
+            const menuOpenBtn = document.getElementById('menu-open-btn');
+            const menuCloseBtn = document.getElementById('menu-close-btn');
+
+            const scrollFade = document.getElementById('modal-scroll-fade');
+            const scrollBtn = document.getElementById('modal-scroll-btn');
+
             const initialModalHTML = signupBody.innerHTML;
 
+            // Shows a "scroll for more" affordance whenever the form content is
+            // taller than the visible modal area — useful for touch, mouse, and
+            // remote/D-pad navigation (TVs, keyboard-only) alike, since it's a
+            // real focusable <button> rather than a gesture-only hint.
+            const updateScrollIndicator = () => {
+                const hasOverflow = signupBody.scrollHeight > signupBody.clientHeight + 4;
+                const distanceFromBottom = signupBody.scrollHeight - signupBody.scrollTop - signupBody.clientHeight;
+                const isNearBottom = distanceFromBottom < 24;
+                const shouldShow = hasOverflow && !isNearBottom;
+                scrollFade.classList.toggle('is-visible', shouldShow);
+                scrollBtn.classList.toggle('is-visible', shouldShow);
+            };
+
+            signupBody.addEventListener('scroll', updateScrollIndicator);
+            window.addEventListener('resize', updateScrollIndicator);
+
+            scrollBtn.addEventListener('click', () => {
+                signupBody.scrollBy({ top: signupBody.clientHeight * 0.75, behavior: 'smooth' });
+            });
+
+            // Form content swaps (tab switch, success/failure screens, restoring
+            // the form) change signupBody's height, so recheck after any of those.
+            const scrollIndicatorObserver = new MutationObserver(() => {
+                requestAnimationFrame(updateScrollIndicator);
+            });
+            scrollIndicatorObserver.observe(signupBody, { childList: true, subtree: true });
+
             const setActiveTab = (tabName) => {
+                // If we're currently showing a success/failure screen, the tabbed
+                // form panels won't be in the DOM — restore them first so the
+                // tab switch actually has something to switch to.
+                if (!signupBody.querySelector('.modal-panel')) {
+                    signupBody.innerHTML = initialModalHTML;
+                }
                 signupBody.querySelectorAll('.modal-panel').forEach(panel => {
                     panel.classList.toggle('is-active', panel.dataset.panel === tabName);
                 });
@@ -892,14 +1122,17 @@
                     tab.classList.toggle('is-active', tab.dataset.tab === tabName);
                 });
                 modalTabIndicator.classList.toggle('is-signin', tabName === 'signin');
+                signupBody.scrollTop = 0;
                 const firstInput = signupBody.querySelector(`.modal-panel[data-panel="${tabName}"] input`);
                 if (firstInput) setTimeout(() => firstInput.focus(), 250);
+                setTimeout(updateScrollIndicator, 260);
             };
 
             const openSignupModal = (tabName) => {
                 signupOverlay.classList.add('is-open');
                 document.body.style.overflow = 'hidden';
                 setActiveTab(tabName || 'signup');
+                setTimeout(updateScrollIndicator, 300);
             };
 
             const closeSignupModal = () => {
@@ -907,11 +1140,39 @@
                 document.body.style.overflow = '';
             };
 
+            menuOpenBtn.addEventListener('click', () => {
+                cinematicMenu.classList.add('is-open');
+                document.body.style.overflow = 'hidden';
+            });
+
+            const closeCinematicMenu = () => {
+                cinematicMenu.classList.remove('is-open');
+                document.body.style.overflow = '';
+            };
+
+            menuCloseBtn.addEventListener('click', closeCinematicMenu);
+
             document.addEventListener('click', (e) => {
                 const trigger = e.target.closest('.modal-trigger');
                 if (trigger) {
                     e.preventDefault();
+                    closeCinematicMenu();
                     openSignupModal(trigger.getAttribute('data-target-tab'));
+                    return;
+                }
+
+                const redirectLink = e.target.closest('.close-redirect-link');
+                if (redirectLink) {
+                    e.preventDefault();
+                    closeCinematicMenu();
+                    const targetId = redirectLink.getAttribute('data-anchor').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        setTimeout(() => {
+                            const offsetPosition = targetElement.getBoundingClientRect().top + window.scrollY - header.offsetHeight;
+                            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                        }, 400);
+                    }
                 }
             });
 
@@ -932,18 +1193,164 @@
                 }
             });
 
-            signupBody.addEventListener('submit', (e) => {
-                const targetForm = e.target.closest('form');
-                if (!targetForm) return;
-                e.preventDefault();
-                
+            // ---- Auth helpers ----
+
+            const friendlyAuthError = (err) => {
+                const msg = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+                const lower = msg.toLowerCase();
+                if (lower.includes('invalid login credentials')) return 'Incorrect email or password.';
+                if (lower.includes('email not confirmed')) return 'Please confirm your email before signing in — check your inbox for the confirmation link.';
+                if (lower.includes('user already registered') || lower.includes('already registered')) return 'An account with this email already exists. Try signing in instead.';
+                if (lower.includes('password should be at least')) return msg;
+                if (lower.includes('rate limit')) return 'Too many attempts. Please wait a moment and try again.';
+                return msg;
+            };
+
+            const setButtonLoading = (form, isLoading, loadingText) => {
+                const btn = form.querySelector('button[type="submit"]');
+                const label = btn.querySelector('.btn-label');
+                if (isLoading) {
+                    btn.dataset.originalLabel = label.textContent;
+                    label.textContent = loadingText;
+                    btn.disabled = true;
+                    if (!btn.querySelector('.btn-spinner')) {
+                        const spinner = document.createElement('span');
+                        spinner.className = 'btn-spinner';
+                        btn.insertBefore(spinner, btn.firstChild);
+                    }
+                } else {
+                    btn.disabled = false;
+                    if (btn.dataset.originalLabel) label.textContent = btn.dataset.originalLabel;
+                    const spinner = btn.querySelector('.btn-spinner');
+                    if (spinner) spinner.remove();
+                }
+            };
+
+            const showErrorBanner = (bannerId, textId, message) => {
+                const banner = document.getElementById(bannerId);
+                const textEl = document.getElementById(textId);
+                if (!banner || !textEl) return;
+                textEl.textContent = message;
+                banner.classList.add('is-visible');
+            };
+
+            const hideErrorBanner = (bannerId) => {
+                const banner = document.getElementById(bannerId);
+                if (banner) banner.classList.remove('is-visible');
+            };
+
+            const showSuccessScreen = (title, message) => {
                 signupBody.innerHTML = `
                     <div class="signup-success">
                         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                        <h3>Identity Verified</h3>
-                        <p>Our routing desks have received your packet entry securely.</p>
+                        <h3>${title}</h3>
+                        <p>${message}</p>
                     </div>
                 `;
+            };
+
+            const showFailureScreen = (title, message) => {
+                signupBody.innerHTML = `
+                    <div class="auth-failed">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                        <h3>${title}</h3>
+                        <p>${message}</p>
+                        <button type="button" class="cta-glow-btn auth-failed-retry" id="auth-failed-retry-btn">
+                            <span>Try Again</span>
+                        </button>
+                    </div>
+                `;
+                document.getElementById('auth-failed-retry-btn').addEventListener('click', () => {
+                    signupBody.innerHTML = initialModalHTML;
+                });
+            };
+
+            // ---- Sign up ----
+            document.addEventListener('submit', async (e) => {
+                if (e.target.id !== 'signup-form') return;
+                e.preventDefault();
+                const form = e.target;
+                hideErrorBanner('signup-error-banner');
+
+                const firstName = form.firstName.value.trim();
+                const lastName = form.lastName.value.trim();
+                const email = form.email.value.trim();
+                const contact = form.contact.value.trim();
+                const password = form.password.value;
+
+                if (password.length < 8) {
+                    showErrorBanner('signup-error-banner', 'signup-error-text', 'Password must be at least 8 characters.');
+                    return;
+                }
+
+                if (!supabaseClient) {
+                    showErrorBanner('signup-error-banner', 'signup-error-text', 'Auth isn\'t configured yet — add your Supabase URL and anon key in the page script.');
+                    return;
+                }
+
+                setButtonLoading(form, true, 'Creating Account...');
+                try {
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            data: {
+                                first_name: firstName,
+                                last_name: lastName,
+                                phone: contact
+                            }
+                        }
+                    });
+
+                    if (error) {
+                        showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(error));
+                        setButtonLoading(form, false);
+                        return;
+                    }
+
+                    // If email confirmation is required, session will be null.
+                    if (data.user && !data.session) {
+                        showSuccessScreen('Check Your Email', `We sent a confirmation link to ${email}. Confirm your address, then sign in below.`);
+                        setTimeout(() => setActiveTab('signin'), 2200);
+                    } else {
+                        showSuccessScreen('Account Created', 'You are signed in and ready to go.');
+                    }
+                } catch (err) {
+                    showErrorBanner('signup-error-banner', 'signup-error-text', friendlyAuthError(err));
+                    setButtonLoading(form, false);
+                }
+            });
+
+            // ---- Sign in ----
+            document.addEventListener('submit', async (e) => {
+                if (e.target.id !== 'signin-form') return;
+                e.preventDefault();
+                const form = e.target;
+                hideErrorBanner('signin-error-banner');
+
+                const email = form.email.value.trim();
+                const password = form.password.value;
+
+                if (!supabaseClient) {
+                    showErrorBanner('signin-error-banner', 'signin-error-text', 'Auth isn\'t configured yet — add your Supabase URL and anon key in the page script.');
+                    return;
+                }
+
+                setButtonLoading(form, true, 'Signing In...');
+                try {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+                    if (error) {
+                        showFailureScreen('Sign In Failed', friendlyAuthError(error));
+                        return;
+                    }
+
+                    showSuccessScreen('Signed In', `Welcome back${data.user && data.user.user_metadata && data.user.user_metadata.first_name ? ', ' + data.user.user_metadata.first_name : ''}. Redirecting you now.`);
+                    // Hook your redirect / app state update here, e.g.:
+                    // setTimeout(() => { window.location.href = '/dashboard'; }, 1200);
+                } catch (err) {
+                    showFailureScreen('Sign In Failed', friendlyAuthError(err));
+                }
             });
 
             signupOverlay.addEventListener('transitionend', (e) => {
@@ -956,7 +1363,20 @@
                 header.classList.toggle('scrolled', window.scrollY > 50);
             });
 
-            // Intersection Motion Engine
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#') && href.length > 1) {
+                        e.preventDefault();
+                        const targetElement = document.getElementById(href.substring(1));
+                        if (targetElement) {
+                            const offsetPosition = targetElement.getBoundingClientRect().top + window.scrollY - header.offsetHeight;
+                            window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                        }
+                    }
+                });
+            });
+
             const sections = document.querySelectorAll('section');
             const sectionObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
