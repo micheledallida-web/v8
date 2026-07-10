@@ -1188,7 +1188,8 @@
 
                     // If email confirmation is required, session will be null.
                     if (data.user && !data.session) {
-                        showSuccessScreen('Check Your Email', `We sent a confirmation link to ${email}. Confirm your address to activate your account.`);
+                        showSuccessScreen('Check Your Email', `We sent a confirmation link to ${email}. Confirm your address, then sign in below.`);
+                        setTimeout(() => setActiveTab('signin'), 2200);
                     } else {
                         showSuccessScreen('Account Created', 'You are signed in and ready to go.');
                     }
