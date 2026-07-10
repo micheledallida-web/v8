@@ -285,6 +285,39 @@
 
         .mobile-nav-toggle { display: none; background: none; border: none; font-size: 1.75rem; cursor: pointer; color: #FFFFFF; }
 
+        /* Fullscreen Expansion Drawer Overlay */
+        .cinematic-menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: radial-gradient(circle at 50% 30%, rgba(9, 15, 30, 0.96), #050608 100%);
+            z-index: 1050; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: var(--spacing-md);
+            opacity: 0; visibility: hidden; pointer-events: none;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .cinematic-menu-overlay.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+        
+        .cinematic-menu-close {
+            position: absolute; top: 32px; right: 32px; background: none; border: none;
+            color: var(--color-muted-text); font-size: 2rem; cursor: pointer; transition: color 0.3s;
+        }
+        .cinematic-menu-close:hover { color: var(--color-primary-text); }
+
+        .cinematic-menu-list { text-align: center; display: flex; flex-direction: column; gap: var(--spacing-sm); width: 100%; max-width: 320px; }
+        .cinematic-menu-item {
+            font-family: var(--font-family-primary); font-weight: 700; font-size: var(--font-size-subtitle);
+            color: var(--color-secondary-text); letter-spacing: -0.01em; display: block; padding: 0.5rem 0;
+            transition: transform 0.4s ease, color 0.4s ease; cursor: pointer;
+        }
+        .cinematic-menu-item:hover { color: var(--color-primary-text); transform: scale(1.04); }
+        .cinematic-menu-item.accent-link { color: var(--color-accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+
+        .cinematic-menu-divider {
+            width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--color-borders), transparent);
+            margin: var(--spacing-xs) 0;
+        }
+        .cinematic-menu-list .cta-glow-btn { width: 100%; justify-content: center; }
+
         /* Cinematic Hero Architecture */
         .hero {
             min-height: 100vh; padding-top: calc(var(--header-height) + 40px);
@@ -445,69 +478,14 @@
         .social-media a:hover { color: var(--color-accent-blue); }
         .footer-bottom { text-align: center; margin-top: var(--spacing-xl); padding-top: var(--spacing-md); border-top: 1px solid var(--color-borders); color: var(--color-muted-text); font-size: 0.8rem; }
 
-        /* Modal Settings */
-        .signup-modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(3, 4, 6, 0.85); z-index: 2000;
-            align-items: center; justify-content: center; padding: var(--spacing-md);
-            opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        }
-        .signup-modal-overlay.is-open { display: flex; opacity: 1; }
-        .signup-modal {
-            background-color: var(--color-panel-background); border: 1px solid var(--color-borders);
-            border-radius: var(--card-radius); padding: var(--spacing-lg); max-width: 460px; width: 100%;
-            position: relative; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
-            transform: translateY(15px); transition: transform 0.3s ease;
-        }
-        .signup-modal-overlay.is-open .signup-modal { transform: translateY(0); }
-        .signup-modal h3 { margin-bottom: 0.5rem; }
-        .signup-modal p { color: var(--color-secondary-text); margin-bottom: var(--spacing-md); font-size: 0.95rem; }
-        .signup-modal-close {
-            position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none;
-            color: var(--color-muted-text); font-size: 1.75rem; cursor: pointer; transition: color 0.3s ease;
-        }
-        .signup-modal-close:hover { color: var(--color-primary-text); }
+        /* STABLE MODAL SCOPES (FIXES VISUAL COLLISIONS) */
+        .modal-panel { display: none !important; }
+        .modal-panel.is-active { display: block !important; animation: modal-panel-in 0.4s ease; }
+        .form-group input { background-color: rgba(0,0,0,0.4) !important; color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.08) !important; }
+        .form-group input:focus { border-color: var(--color-accent-blue) !important; }
+        .form-group input::placeholder { color: var(--color-muted-text); opacity: 0.5; }
 
-        .modal-tabs {
-            position: relative; display: flex; background: rgba(0,0,0,0.2);
-            border: 1px solid var(--color-borders); border-radius: 999px; padding: 4px;
-            margin-bottom: var(--spacing-md);
-        }
-        .modal-tab {
-            flex: 1; position: relative; z-index: 2; background: none; border: none; cursor: pointer;
-            padding: 0.65rem 1rem; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem;
-            color: var(--color-secondary-text); border-radius: 999px; transition: color 0.3s ease;
-        }
-        .modal-tab.is-active { color: #FFFFFF; }
-        .modal-tab-indicator {
-            position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px);
-            background-color: var(--color-accent-blue); border-radius: 999px; z-index: 1;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-        .modal-tab-indicator.is-signin { transform: translateX(100%); }
-
-        .modal-panel { display: none; }
-        .modal-panel.is-active { display: block; animation: modal-panel-in 0.4s ease; }
-        @keyframes modal-panel-in { from { opacity: 0; transform: translateY(10px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xs); }
-        .form-group { margin-bottom: var(--spacing-sm); }
-        .form-group label { display: block; font-family: var(--font-family-primary); font-weight: 600; font-size: 0.85rem; color: var(--color-secondary-text); margin-bottom: 0.5rem; }
-        .form-group input {
-            width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--color-borders);
-            background-color: rgba(0,0,0,0.3); color: var(--color-primary-text); font-family: var(--font-family-secondary);
-            font-size: 1rem; transition: border-color 0.3s;
-        }
-        .form-group input:focus { outline: none; border-color: var(--color-accent-blue); }
-        .signup-submit-btn { width: 100%; margin-top: var(--spacing-xs); justify-content: center; }
-        .modal-switch-line { margin: var(--spacing-md) 0 0; text-align: center; font-size: 0.9rem; color: var(--color-muted-text); }
-        .modal-switch-link { color: var(--color-accent-blue); font-weight: 600; }
-        
-        .signup-success { text-align: center; padding: var(--spacing-md) 0; }
-        .signup-success svg { width: 56px; height: 56px; stroke: var(--color-accent-blue); margin-bottom: var(--spacing-sm); }
-
-        /* Mobile Layout Stack Fixes */
+        /* Responsive Architecture overrides */
         @media (max-width: 1024px) {
             :root { --font-size-hero: 3.2rem; --font-size-section-title: 2.25rem; --spacing-xxl: 5rem; --spacing-xl: 3.5rem; }
             .header { top: 12px; width: calc(100% - 24px); }
@@ -551,10 +529,27 @@
                 <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
                     <span>Request Quote</span>
                 </button>
-                <button class="mobile-nav-toggle" aria-label="Open navigation menu">&#9776;</button>
+                <button class="mobile-nav-toggle" id="menu-open-btn" aria-label="Open navigation menu">&#9776;</button>
             </div>
         </div>
     </header>
+
+    <div class="cinematic-menu-overlay" id="cinematic-menu">
+        <button class="cinematic-menu-close" id="menu-close-btn" aria-label="Close navigation menu">&times;</button>
+        <div class="cinematic-menu-list">
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#tracking-input">Track Shipment</span>
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#services">Services</span>
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#about">About</span>
+            <span class="cinematic-menu-item close-redirect-link" data-anchor="#careers">Careers</span>
+            <span class="cinematic-menu-item modal-trigger" data-target-tab="signup">Contact</span>
+            <span class="cinematic-menu-item modal-trigger accent-link" data-target-tab="signin">Customer Login</span>
+            <div class="cinematic-menu-divider"></div>
+            <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
+                <span>Request a Quote</span>
+                <svg viewBox="0 0 24 24" class="cta-chevron"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
 
     <div class="signup-modal-overlay" id="signup-modal-overlay">
         <div class="signup-modal" role="dialog" aria-modal="true" aria-labelledby="signup-modal-title">
@@ -634,7 +629,7 @@
                         <span>Learn More</span>
                     </a>
                 </div>
-                <form class="tracking-widget" onsubmit="alert('Tracking ID verified: ' + document.getElementById('tracking-input').value); return false;">
+                <form class="tracking-widget" id="hero-tracking-form">
                     <input type="text" id="tracking-input" placeholder="Enter routing or tracking reference" aria-label="Tracking number input">
                     <button type="submit" class="cta-glow-btn"><span>Track Asset</span></button>
                 </form>
@@ -771,10 +766,10 @@
                     <div class="premium-card career-card">
                         <div>
                             <h3>Operations Principal</h3>
-                            <p>Oversee algorithmic cross-dock configurations and fleet harmonization strategies.</p>
+                            <p>Lead daily warehouse and transport operations. Make sure shipments move on time, teams work efficiently, and customers receive reliable service.</p>
                         </div>
                         <button class="cta-glow-btn modal-trigger" data-target-tab="signup">
-                            <span>Submit Dossier</span>
+                            <span>Apply Now</span>
                         </button>
                     </div>
                     <div class="premium-card career-card">
@@ -790,7 +785,6 @@
             </div>
         </section>
 
-        <!-- MASTER DESIGN SYSTEM BASELINE (UNTOUCHED STYLING) -->
         <section id="quote" class="final-cta-section fade-in">
             <div class="cta-glow-line cta-glow-line-1"></div>
             <div class="cta-glow-line cta-glow-line-2"></div>
@@ -873,102 +867,6 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const header = document.getElementById('header');
-            const signupOverlay = document.getElementById('signup-modal-overlay');
-            const signupClose = document.getElementById('signup-modal-close');
-            const signupBody = document.getElementById('signup-modal-body');
-            const modalTabs = document.getElementById('modal-tabs');
-            const modalTabIndicator = document.getElementById('modal-tab-indicator');
-
-            const initialModalHTML = signupBody.innerHTML;
-
-            const setActiveTab = (tabName) => {
-                signupBody.querySelectorAll('.modal-panel').forEach(panel => {
-                    panel.classList.toggle('is-active', panel.dataset.panel === tabName);
-                });
-                modalTabs.querySelectorAll('.modal-tab').forEach(tab => {
-                    tab.classList.toggle('is-active', tab.dataset.tab === tabName);
-                });
-                modalTabIndicator.classList.toggle('is-signin', tabName === 'signin');
-                const firstInput = signupBody.querySelector(`.modal-panel[data-panel="${tabName}"] input`);
-                if (firstInput) setTimeout(() => firstInput.focus(), 250);
-            };
-
-            const openSignupModal = (tabName) => {
-                signupOverlay.classList.add('is-open');
-                document.body.style.overflow = 'hidden';
-                setActiveTab(tabName || 'signup');
-            };
-
-            const closeSignupModal = () => {
-                signupOverlay.classList.remove('is-open');
-                document.body.style.overflow = '';
-            };
-
-            document.addEventListener('click', (e) => {
-                const trigger = e.target.closest('.modal-trigger');
-                if (trigger) {
-                    e.preventDefault();
-                    openSignupModal(trigger.getAttribute('data-target-tab'));
-                }
-            });
-
-            signupClose.addEventListener('click', closeSignupModal);
-            signupOverlay.addEventListener('click', (e) => { if (e.target === signupOverlay) closeSignupModal(); });
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && signupOverlay.classList.contains('is-open')) closeSignupModal(); });
-
-            modalTabs.addEventListener('click', (e) => {
-                const tabBtn = e.target.closest('.modal-tab');
-                if (tabBtn) setActiveTab(tabBtn.dataset.tab);
-            });
-
-            signupBody.addEventListener('click', (e) => {
-                const switchLink = e.target.closest('.modal-switch-link');
-                if (switchLink) {
-                    e.preventDefault();
-                    setActiveTab(switchLink.dataset.goto);
-                }
-            });
-
-            signupBody.addEventListener('submit', (e) => {
-                const targetForm = e.target.closest('form');
-                if (!targetForm) return;
-                e.preventDefault();
-                
-                signupBody.innerHTML = `
-                    <div class="signup-success">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                        <h3>Identity Verified</h3>
-                        <p>Our routing desks have received your packet entry securely.</p>
-                    </div>
-                `;
-            });
-
-            signupOverlay.addEventListener('transitionend', (e) => {
-                if (e.target === signupOverlay && !signupOverlay.classList.contains('is-open')) {
-                    signupBody.innerHTML = initialModalHTML;
-                }
-            });
-
-            window.addEventListener('scroll', () => {
-                header.classList.toggle('scrolled', window.scrollY > 50);
-            });
-
-            // Intersection Motion Engine
-            const sections = document.querySelectorAll('section');
-            const sectionObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { root: null, threshold: 0.08, rootMargin: '0px' });
-            
-            sections.forEach(section => { sectionObserver.observe(section); });
-        });
-    </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>
