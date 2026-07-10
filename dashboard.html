@@ -163,12 +163,6 @@
         .dashboard-main { max-width: 1160px; margin: 0 auto; padding: 2.75rem 2rem 5rem; }
         .page-heading { margin-bottom: 2.25rem; }
         .page-heading p { color: var(--color-secondary-text); margin-top: 0.4rem; font-size: 0.95rem; }
-        .placeholder-note {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            margin-top: 0.9rem; font-size: 0.78rem; color: var(--color-warning);
-            background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.25);
-            padding: 0.4rem 0.85rem; border-radius: 999px;
-        }
 
         .grid-layout { display: grid; grid-template-columns: 1fr 1.7fr; gap: 1.5rem; align-items: start; }
 
@@ -190,8 +184,7 @@
             font-family: var(--font-family-primary); font-weight: 700; font-size: 1.25rem;
             margin-bottom: 1rem;
         }
-        .account-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.15rem; }
-        .account-email { color: var(--color-muted-text); font-size: 0.85rem; margin-bottom: 1.5rem; }
+        .account-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
 
         .account-row {
             display: flex; justify-content: space-between; align-items: center;
@@ -200,7 +193,7 @@
         }
         .account-row:last-child { border-bottom: none; }
         .account-row span:first-child { color: var(--color-muted-text); }
-        .account-row span:last-child { font-weight: 600; }
+        .account-row span:last-child { font-weight: 600; text-align: right; word-break: break-all; margin-left: 1rem; }
 
         .plan-badge {
             display: inline-block; font-size: 0.7rem; font-weight: 700;
@@ -210,7 +203,54 @@
             padding: 0.25rem 0.65rem;
         }
 
-        /* --- Shipments --- */
+        /* --- Shipments & Tracking Block --- */
+        .tracking-widget {
+            background: rgba(255,255,255,0.015);
+            border: 1px solid var(--color-borders);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        .tracking-widget input {
+            background: transparent;
+            border: 1px solid var(--color-borders);
+            border-radius: 12px;
+            padding: 1.15rem 1.25rem;
+            color: var(--color-primary-text);
+            font-family: var(--font-family-secondary);
+            font-size: 0.95rem;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.25s ease;
+        }
+        .tracking-widget input::placeholder {
+            color: var(--color-muted-text);
+        }
+        .tracking-widget input:focus {
+            border-color: rgba(59,130,246,0.5);
+        }
+        .tracking-widget button {
+            background: linear-gradient(180deg, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.25) 100%);
+            border: 1px solid rgba(59,130,246,0.6);
+            border-radius: 12px;
+            padding: 1.15rem;
+            color: var(--color-primary-text);
+            font-family: var(--font-family-primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.25s ease;
+        }
+        .tracking-widget button:hover {
+            background: linear-gradient(180deg, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0.35) 100%);
+        }
+
         .shipment-list { display: flex; flex-direction: column; gap: 1.1rem; }
         .shipment-card {
             background: rgba(255,255,255,0.02); border: 1px solid var(--color-borders);
@@ -345,10 +385,6 @@
             <div class="page-heading">
                 <h1 id="page-welcome">Welcome back</h1>
                 <p>Track active shipments and manage your account details.</p>
-                <div class="placeholder-note">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    Shipment data below is placeholder — not yet pulled from Supabase
-                </div>
             </div>
 
             <div class="grid-layout">
@@ -356,8 +392,11 @@
                     <h3>Account Overview</h3>
                     <div class="account-avatar" id="account-initials">--</div>
                     <div class="account-name" id="account-name">—</div>
-                    <div class="account-email" id="account-email">—</div>
 
+                    <div class="account-row">
+                        <span>Email</span>
+                        <span id="account-email-row">—</span>
+                    </div>
                     <div class="account-row">
                         <span>Plan</span>
                         <span class="plan-badge">Enterprise</span>
@@ -368,7 +407,7 @@
                     </div>
                     <div class="account-row">
                         <span>Active Shipments</span>
-                        <span>3</span>
+                        <span>1</span>
                     </div>
                     <div class="account-row">
                         <span>Contact Number</span>
@@ -378,6 +417,12 @@
 
                 <section class="panel" id="shipments-panel">
                     <h3>Shipment Tracking</h3>
+                    
+                    <div class="tracking-widget">
+                        <input type="text" placeholder="Enter routing or tracking reference">
+                        <button type="button">TRACK SHIPMENT</button>
+                    </div>
+
                     <div class="shipment-list" id="shipment-list">
                         <!-- populated by JS with placeholder data -->
                     </div>
@@ -396,9 +441,7 @@
         // step: index into TRACKER_STEPS below representing current progress
         const TRACKER_STEPS = ['Order\nConfirmed', 'Picked\nUp', 'In\nTransit', 'Out for\nDelivery', 'Delivered'];
         const PLACEHOLDER_SHIPMENTS = [
-            { ref: 'VG-48210-NY', route: 'Toronto → New York HQ', eta: 'Jul 12', step: 2 },
-            { ref: 'VG-48198-CA', route: 'Seattle → California', eta: 'Jul 10', step: 4 },
-            { ref: 'VG-48233-FL', route: 'Atlanta → Florida', eta: 'Jul 15', step: 0 },
+            { ref: 'VG-48210-NY', route: 'Toronto → New York HQ', eta: 'Jul 12', step: 2 }
         ];
 
         function renderTracker(currentStep) {
@@ -457,7 +500,7 @@
 
             document.getElementById('account-initials').textContent = initialsText;
             document.getElementById('account-name').textContent = fullName;
-            document.getElementById('account-email').textContent = user.email || '—';
+            document.getElementById('account-email-row').textContent = user.email || '—';
             document.getElementById('account-created').textContent = formatDate(user.created_at);
             document.getElementById('account-phone').textContent = meta.phone || 'Not provided';
 
@@ -536,6 +579,3 @@
     </script>
 </body>
 </html>
-HTMLEOF
-cp /home/claude/dashboard.html /mnt/user-data/outputs/dashboard.html
-echo "done"
